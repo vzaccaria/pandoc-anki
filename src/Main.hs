@@ -2,49 +2,43 @@
 
 module Main where
 
-import Prelude (($), Maybe(..), Bool(..), not, return, putStrLn, map, IO (..), readFile, (=<<),(<$>), (>>=))
-import System.Environment (getArgs)
-import System.Console.Docopt.NoTH
-import System.Process
-import Data.String
-import System.Exit
-import qualified Data.Map as M
-import Control.Monad (when)
-import UsageCLI (progUsage)
-import qualified Data.Text as T
-import Debug.Trace
-import Filesystem.Path.CurrentOS (filename, encodeString, replaceExtension)
-
-import Utils
+import           Control.Monad              (when)
+import qualified Data.Map                   as M
+import           Data.String
+import qualified Data.Text                  as T
+import           Debug.Trace
+import           Deck.Parse
+import           Deck.Render
+import           Filesystem.Path.CurrentOS  (encodeString, filename,
+                                             replaceExtension)
+import           Prelude                    (Bool (..), IO (..), Maybe (..),
+                                             map, not, print, putStrLn,
+                                             readFile, return, ($), (<$>),
+                                             (=<<), (>>=))
+import           System.Console.Docopt.NoTH
+import           System.Environment         (getArgs)
+import           System.Exit
+import           System.Process
+import           UsageCLI                   (progUsage)
+import           Utils
 
 split :: String -> String -> [String]
-split sep str = map T.unpack $ T.splitOn (T.pack sep) (T.pack str)
+split sep str =
+  map T.unpack $
+  T.splitOn (T.pack sep)
+            (T.pack str)
 
 dispatchOptions :: Docopt -> IO ()
-dispatchOptions usage = do {
-  opts <- parseArgsOrExit usage =<< getArgs;
-  file <- getArgOrExitWith usage opts (argument "FILE");
-  let
-      hasLOpt       name = (isPresent opts (longOption name))
-      getLOptVal    name = let (Just s) = getArg opts (longOption name) in s
-
-
-      justLatex = isPresent opts (longOption "latex")
-
-      fname = filename $ fromString file
-      oname = encodeString $ replaceExtension fname (T.pack "pdf") 
-
-  in do {
-    f <- readFile file;
-    (latexPreamble, tikzPreamble) <- readPreambles;
-    if not justLatex then
-      drawMindMap oname $ parseMindMap $ readDoc f
-    else
-      putStrLn $ asMindMapLatex (parseMindMap $ readDoc f) latexPreamble tikzPreamble
-  };
-  return ();
-}
-
+dispatchOptions usage =
+  let prog =
+        do opts <- parseArgsOrExit usage =<< getArgs
+           file <-
+             getArgOrExitWith usage
+                              opts
+                              (argument "FILE")
+           f <- readFile file
+           putStrLn $ renderFile f
+  in prog
 
 main :: IO ()
 main = dispatchOptions progUsage

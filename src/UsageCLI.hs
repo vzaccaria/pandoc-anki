@@ -6,15 +6,14 @@ import System.Console.Docopt
 
 progUsage :: Docopt
 progUsage = [docopt|
-pandoc-mm
+pandoc-anki
 
 Usage:
-    pandoc-mm FILE [ -x ]
-    pandoc-mm --help | -h
-    pandoc-mm --version
+    pandoc-anki FILE
+    pandoc-anki --help | -h
+    pandoc-anki --version
 
 Options:
-    -x, --latex            Output raw latex
     -h, --help             Show help
     --version              Show version.
 

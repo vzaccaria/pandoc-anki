@@ -1,0 +1,3 @@
+Front;Back
+<p>A triple [latex]${C}(O, M, \circ)$[/latex] where</p><ul><li>[latex]$o \in O, \exists id_o \in M$[/latex]</li><li>[latex]$\circ$[/latex] is defined for all connected objects</li><li>[latex]$\circ(A \rightarrow B, B \rightarrow C) = A \rightarrow C$[/latex]</li></ul>;<ul><li>[latex]$(f \circ g) \circ h == f \circ (h \circ g)$[/latex]</li><li>[latex]$id_x \circ f = f \circ id_y$[/latex]</li></ul>
+

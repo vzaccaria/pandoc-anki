@@ -24,6 +24,7 @@ readDoc s = case readOrg def s of
   Right doc -> doc
   Left err -> error (show err)
 
+
 writeDoc :: Pandoc -> String
 writeDoc = writeLaTeX def
 
