@@ -1,21 +1,15 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
-module Deck.Render where
+module Deck.RenderCSV where
 
-import           Data.Char               (toLower)
 import           Data.List
 import           Data.List.Split
 import qualified Data.Map                as Map
-import           Data.Maybe
 import           Data.String.Interpolate
 import           Data.Tree
-import           Debug.Trace
 import           Deck.Parse
-import           System.Directory
-import           System.Process
 import           Text.Pandoc
-import           Text.Pandoc.Error
 import           Text.Pandoc.Walk        (walk)
 import           Utils
 
@@ -33,14 +27,15 @@ processBlock = walk processInline
 processPandoc :: Pandoc -> Pandoc
 processPandoc = walk processBlock
 
+unLines :: String -> String
 unLines s = intercalate "" $ splitOn "\n" s
 
 
 renderLeaf :: StructureLeaf -> String
-renderLeaf l = unLines $ (processLeafContents . contents $ l)
+renderLeaf l = unLines (processLeafContents . contents $ l)
 
 renderCard :: String -> Structure -> String
-renderCard ctx (Node q [Node a _]) =
+renderCard _ (Node q [Node a _]) =
   let
     q' = renderLeaf q
     a' = renderLeaf a
@@ -60,8 +55,8 @@ _drawAsForest f =
   in putStrLn t'
 
 
-renderFile :: String -> String
-renderFile s = let
+renderFileCSV :: String -> String
+renderFileCSV s = let
   (Node _ ctxs) = getStructure $ parseDeck $ processPandoc $ readDoc s
   s' = intercalate "\n" (map renderContext ctxs)
   in "Front;Back\n" ++ s'

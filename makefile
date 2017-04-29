@@ -2,7 +2,6 @@
 
 SRC=\
 	src/Main.hs \
-	src/Test.hs \
 	src/UsageCLI.hs \
 	src/Utils.hs
 
