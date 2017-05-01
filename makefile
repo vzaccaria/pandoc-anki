@@ -13,6 +13,9 @@ $(BIN): $(SRC)
 	stack build .
 	stack install .
 
+pandoc-anki.json: 
+	cd src && stack ghc -- Deck/Crowd/Test.hs -e "d_dump dr" > ../pandoc-anki.json
+
 # examples/%.pdf: examples/%.org $(BIN)
 # 	stack exec pandoc-anki -- $<
 # 	mv $*.pdf examples

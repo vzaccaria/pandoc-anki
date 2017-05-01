@@ -1,29 +1,24 @@
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE OverloadedStrings #-}
+
 module Utils where
 
-import Text.Pandoc
-import Text.Pandoc.Error
-import Text.Pandoc.Walk (walk)
-import Debug.Trace
-import Data.List
-import Data.String.Interpolate
-import System.Process
-import System.Directory
-import Data.Char (toLower)
-import Data.Tree
-import qualified Data.Map as Map
+import           Data.Char    (ord, toLower)
+import qualified Data.Map     as Map
+import           Data.UUID
+import           Data.UUID.V5
+import           Data.Word
+import           Text.Pandoc
 
 dasherize :: Inline -> String
 dasherize Space = "-"
 dasherize (Str s) = map toLower s
-
+dasherize _ = error "Invalid input to dasherize"
 
 readDoc :: String -> Pandoc
-readDoc s = case readOrg def s of
-  Right doc -> doc
-  Left err -> error (show err)
-
+readDoc s =
+    case readOrg def s of
+        Right doc -> doc
+        Left err -> error (show err)
 
 writeDoc :: Pandoc -> String
 writeDoc = writeLaTeX def
@@ -32,12 +27,18 @@ expandToLatex :: [Block] -> String
 expandToLatex b = writeDoc $ Pandoc (Meta Map.empty) b
 
 -- A bit like map but stops when f returns Nothing.
-takeWhile' :: ( a -> Bool ) -> [ a ] -> ([a], [a])
-takeWhile' f (a:b) = case f a of
-    True -> let r = takeWhile' f b
+takeWhile'
+    :: (a -> Bool) -> [a] -> ([a], [a])
+takeWhile' f (a:b) =
+    case f a of
+        True ->
+            let r = takeWhile' f b
             in (a : fst r, (snd r))
-    False -> ([], a:b)
+        False -> ([], a : b)
 takeWhile' f [] = ([], [])
 
+charToWord8 :: [Char] -> [Word8]
+charToWord8 n = (map (fromIntegral . ord) n) :: [Word8]
 
-
+getUUIDfromString :: String -> String
+getUUIDfromString s = toString $ generateNamed namespaceURL (charToWord8 s)

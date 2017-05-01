@@ -29,4 +29,9 @@ executable pandoc-anki
                      , text
                      , monad-supply
                      , split
+                     , data-default
+                     , aeson
+                     , bytestring
+                     , uuid
+                     , aeson-pretty
 
