@@ -21,8 +21,7 @@ import           Text.Pandoc.Walk        (walk)
 import           Utils
 
 data NoteModel = NM
-    {
-     nm_css       :: String
+    { nm_css       :: String
     , nm_flds      :: [NoteModelField]
     , nm_latexPost :: String
     , nm_latexPre  :: String
@@ -57,7 +56,7 @@ data NoteModelField = NMF
 
 nmf_def_front = NMF "Arial" [] "Front" 0 False 20 False
 
-nmf_def_back = NMF "Arial" [] "Front" 0 False 20 False
+nmf_def_back = NMF "Arial" [] "Back" 1 False 20 False
 
 reqAll =
     Array $
@@ -91,7 +90,7 @@ instance Default NoteTmpl where
 instance ToJSON NoteModel where
     toJSON d =
         object
-            [ "type" .= ("NoteModel" :: String)
+            [ "__type__" .= ("NoteModel" :: String)
             , "crowdanki_uuid" .= nm_uuid d
             , "css" .= nm_css d
             , "flds" .= nm_flds d

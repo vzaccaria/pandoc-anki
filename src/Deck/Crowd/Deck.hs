@@ -11,15 +11,10 @@ import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
 import           Data.Default
 import           Data.List
-import           Data.List.Split
-import qualified Data.Map                   as Map
-import           Data.String.Interpolate
-import           Data.Tree
+import           Deck.Crowd.DeckConfig
 import           Deck.Crowd.Note
 import           Deck.Crowd.NoteModel
 import           GHC.Generics
-import           Text.Pandoc
-import           Text.Pandoc.Walk           (walk)
 import           Utils
 
 data Deck = D
@@ -31,6 +26,7 @@ data Deck = D
     , d_media_files :: [String]
     , d_name        :: String
     , d_desc        :: String
+    , d_deckconfig  :: DeckConfig
     } deriving (Show,Generic)
 
 d_dump :: Deck -> IO ()
@@ -51,7 +47,8 @@ instance ToJSON Deck where
             [ "__type__" .= ("Deck" :: String)
             , "children" .= d_children d
             , "crowdanki_uuid" .= d_uuid d
-            , "deck_config_uuid" .= d_uuid d
+            , "deck_config_uuid" .= dc_uuid (d_deckconfig d)
+            , "deck_configurations" .= [d_deckconfig d]
             , "desc" .= d_desc d
             , "dyn" .= d_dyn d
             , "extendNew" .= d_extendNew d
@@ -62,4 +59,4 @@ instance ToJSON Deck where
             , "notes" .= d_notes d]
 
 instance Default Deck where
-    def = D [] [] 0 10 50 [] "Unnamed deck" "No description"
+    def = D [] [] 0 10 50 [] "Unnamed deck" "No description" Base
