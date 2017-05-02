@@ -2,8 +2,10 @@
 
 module Utils where
 
-import           Data.Char    (ord, toLower)
-import qualified Data.Map     as Map
+import           Control.Monad.Identity
+import           Control.Monad.Random
+import           Data.Char              (ord, toLower)
+import qualified Data.Map               as Map
 import           Data.UUID
 import           Data.UUID.V5
 import           Data.Word
@@ -42,3 +44,11 @@ charToWord8 n = (map (fromIntegral . ord) n) :: [Word8]
 
 getUUIDfromString :: String -> String
 getUUIDfromString s = toString $ generateNamed namespaceURL (charToWord8 s)
+
+type UUIDGen a = RandT StdGen Identity a -- Use mkStdGen
+
+getRandomUUID :: UUIDGen String
+getRandomUUID =
+    getRandom >>=
+    \x ->
+         return $ toString x

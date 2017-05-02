@@ -16,9 +16,8 @@ data Note = N
     , n_flags      :: Integer
     , n_note_model :: NoteModel
     , n_tags       :: [String]
+    , n_guid       :: String
     } deriving (Show,Generic)
-
-n_guid n = getUUIDfromString (concat $ n_fields n)
 
 instance ToJSON Note where
     toJSON d =
@@ -30,3 +29,12 @@ instance ToJSON Note where
             , "guid" .= n_guid d
             , "note_model_uuid" .= (nm_uuid $ n_note_model d)
             , "tags" .= n_tags d]
+
+finalizeNote :: Note -> UUIDGen Note
+finalizeNote n = do
+    nm <- finalizeNoteModel $ n_note_model n
+    return $
+        n
+        { n_note_model = nm
+        , n_guid = getUUIDfromString (show n)
+        }

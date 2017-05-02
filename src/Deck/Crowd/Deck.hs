@@ -6,6 +6,8 @@
 
 module Deck.Crowd.Deck where
 
+import           Control.Monad.Identity
+import           Control.Monad.Random
 import           Data.Aeson
 import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
@@ -27,13 +29,14 @@ data Deck = D
     , d_name        :: String
     , d_desc        :: String
     , d_deckconfig  :: DeckConfig
+    , d_uuid        :: String
     } deriving (Show,Generic)
 
 d_dump :: Deck -> IO ()
-d_dump d = BL.putStrLn $ encodePretty d
+d_dump d = BL.putStrLn $ encodePretty (d_decorate d)
 
-d_uuid :: Deck -> String
-d_uuid d = getUUIDfromString (d_name d)
+d_decorate :: Deck -> Deck
+d_decorate d = runIdentity $ evalRandT (annoteDeck d) (mkStdGen 1)
 
 d_note_models :: Deck -> [NoteModel]
 d_note_models d =
@@ -59,4 +62,27 @@ instance ToJSON Deck where
             , "notes" .= d_notes d]
 
 instance Default Deck where
-    def = D [] [] 0 10 50 [] "Unnamed deck" "No description" Base
+    def =
+        D
+            []
+            []
+            0
+            10
+            50
+            []
+            "Unnamed deck"
+            "No description"
+            (Base "NoUUID" "No Name")
+            "NoUUID"
+
+annoteDeck :: Deck -> UUIDGen Deck
+annoteDeck d = do
+    dc <- finalizeDeckConfig (d_deckconfig d)
+    ns <- mapM finalizeNote (d_notes d)
+    du <- getRandomUUID
+    return
+        d
+        { d_notes = ns
+        , d_deckconfig = dc
+        , d_uuid = du
+        }

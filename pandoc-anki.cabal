@@ -34,4 +34,5 @@ executable pandoc-anki
                      , bytestring
                      , uuid
                      , aeson-pretty
+                       , MonadRandom 
 

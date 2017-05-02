@@ -29,9 +29,8 @@ data NoteModel = NM
     , nm_sortf     :: Integer
     , nm_tags      :: [String]
     , nm_tmpls     :: [NoteTmpl]
+    , nm_uuid      :: String
     } deriving (Show,Generic)
-
-nm_uuid nm = getUUIDfromString (nm_css nm)
 
 data NoteTmpl = NT
     { nt_questionFormat :: String
@@ -74,6 +73,7 @@ instance Default NoteModel where
             0
             []
             [(def :: NoteTmpl)]
+            "NoUID"
 
 instance Default NoteTmpl where
     def =
@@ -127,3 +127,11 @@ instance ToJSON NoteModelField where
             , "rtl" .= nmf_rtl d
             , "size" .= nmf_size d
             , "sticky" .= nmf_sticky d]
+
+finalizeNoteModel :: NoteModel -> UUIDGen NoteModel
+finalizeNoteModel nm =
+    return
+        (nm
+         { nm_uuid = getUUIDfromString (show nm)
+         , nm_name = ("noteModel-" ++ (getUUIDfromString (show nm)))
+         })

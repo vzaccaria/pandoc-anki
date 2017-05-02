@@ -17,10 +17,10 @@ import           Text.Pandoc.Walk        (walk)
 import           Utils
 
 n1 :: Note
-n1 = N ["Q:What is a?", "Just this"] 0 (def :: NoteModel) []
+n1 = N ["Q:What is a?", "Just this"] 0 (def :: NoteModel) [] ""
 
 n2 :: Note
-n2 = N ["Q:What is b?", "Just this"] 0 (def :: NoteModel) []
+n2 = N ["Q:What is b?", "Just this"] 0 (def :: NoteModel) [] ""
 
 dr :: Deck
 dr =
