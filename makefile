@@ -13,13 +13,13 @@ show:
 
 .PHONY: test
 test: $(BIN)
-	$(BIN) ./examples/Category.org -j
+	$(BIN) ./examples/Algebra.org -j
 
 $(BIN): $(SRC)
 	stack build .
 
 pandoc-anki.json: $(BIN)
-	$(BIN) ./examples/Category.org -j > $@
+	$(BIN) ./examples/Algebra.org -j > $@
 
 # cd src && stack ghc -- Deck/Crowd/Test.hs -e "d_dump dr" > ../pandoc-anki.json
 

@@ -73,6 +73,7 @@ leCSS =
 
 img {
     vertical-align: middle;
+    -webkit-transform: scale(0.7, 0.7);
 }
 
 .card {

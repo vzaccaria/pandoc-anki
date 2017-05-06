@@ -19,9 +19,9 @@ import           Text.Pandoc.Walk        (walk)
 import           Utils
 
 renderCardJSON :: Structure -> Note
-renderCardJSON (Node q [Node a _]) =
-    let q' = renderLeaf q
-        a' = renderLeaf a
+renderCardJSON (Node q _) =
+    let q' = getName q
+        a' = renderLeaf q
     in N [q', a'] 0 (def :: NoteModel) [] ""
 
 renderStructure :: Integer -> Integer -> InternalDeck -> Structure -> Deck
