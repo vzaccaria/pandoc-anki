@@ -10,6 +10,9 @@ BIN=.stack-work/dist/x86_64-osx/Cabal-1.22.5.0/build/pandoc-anki/pandoc-anki
 show:
 	echo $(SRC)
 
+.PHONY: install
+install:
+	stack install
 
 .PHONY: test
 test: $(BIN)
