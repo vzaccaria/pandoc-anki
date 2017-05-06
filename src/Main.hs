@@ -13,11 +13,15 @@ split sep str = map T.unpack $ T.splitOn (T.pack sep) (T.pack str)
 
 dispatchOptions :: Docopt -> IO ()
 dispatchOptions usage' =
-    let prog = do
+    let wantsJson opts = isPresent opts (longOption "json")
+        prog = do
             opts <- parseArgsOrExit usage' =<< getArgs
             file <- getArgOrExitWith usage' opts (argument "FILE")
             f <- readFile file
-            putStrLn $ renderFileCSV f
+            putStrLn $
+                if wantsJson opts
+                    then ""
+                    else renderFileCSV f
     in prog
 
 main :: IO ()

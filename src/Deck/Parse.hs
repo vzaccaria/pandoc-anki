@@ -30,16 +30,16 @@ data StructureLeaf = Concept
 
 type Structure = Tree StructureLeaf
 
-data Deck = M
+data InternalDeck = ID
     { getMapName   :: Maybe String
     , getAuthor    :: Maybe String
     , getStructure :: Structure
     , otherMeta    :: String -> Maybe String
     }
 
-getDeckName :: Deck -> String
-getDeckName (M (Just n) _ _ _) = n
-getDeckName (M _ _ _ _) = "No name"
+getDeckName :: InternalDeck -> String
+getDeckName (ID (Just n) _ _ _) = n
+getDeckName (ID _ _ _ _) = "No name"
 
 type Chunk = (Block, [Block])
 
@@ -105,47 +105,17 @@ toStructure _ [] = Nothing
 parseChunks :: [Chunk] -> Structure
 parseChunks cs =
     let subFor = unfoldr (toStructure 1) cs
-        currentTree = Node (Concept "root" 0 "Root" (Map.empty) []) subFor
+        currentTree = Node (Concept "root" 0 "Root" Map.empty []) subFor
     in currentTree
 
 getChunks :: Pandoc -> [Chunk]
 getChunks (Pandoc _ bs) = foldl (flip add) [] bs
 
--- To generate unique identifiers we use the Supply monad:
--- https://hackage.haskell.org/package/monad-supply-0.6/docs/Control-Monad-Supply.html
--- See for example http://stackoverflow.com/questions/22828137/how-do-i-use-the-supply-monad-to-create-a-function-that-generates-globally-uniqu
--- this will give us: evalSupply :: SuppliedStructure -> [Integer] -> Structure
-type SuppliedStructure = Supply Integer Structure
-
--- How to build a SuppliedStructure from a Structure? Let'traverse the tree with mapM and
--- embellish each node with an action that updates it's number
---
--- mapM :: Monad m => (a -> m b) -> t a -> m (t b)
-buildSuppliedStructure
-    :: Structure -> SuppliedStructure
-buildSuppliedStructure = mapM f
-  where
-    f o@(Concept i _ x y z)      -- we should fill up the id field
-     = do
-        n <- supply  -- get the new supply
-        if i /= "root"
-            then return $ Concept (i ++ "-" ++ show n) n x y z
-            else return o
-
-supplyIDs :: [Integer] -> Structure -> Structure
-supplyIDs a s = evalSupply (buildSuppliedStructure s) a
-
-uniquifyID :: Deck -> Deck
-uniquifyID (M t a c m) = M t a c' m
-  where
-    c' = supplyIDs [1 ..] c
-
-parseDeck :: Pandoc -> Deck
+parseDeck :: Pandoc -> InternalDeck
 parseDeck x@(Pandoc meta _) =
-    uniquifyID $
-    M (getMV "title") (getMV "author") (parseChunks $ getChunks x) getMV
+    ID (getMV "title") (getMV "author") (parseChunks $ getChunks x) getMV
   where
     getMV k =
         case Map.lookup k (unMeta meta) of
-            Just (MetaInlines i) -> Just $ asPlainString i
+            Just (MetaInlines mi) -> Just $ asPlainString mi
             _ -> Nothing
