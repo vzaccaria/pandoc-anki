@@ -8,6 +8,7 @@ import           Control.Monad.Supply
 import           Data.Char               (toLower)
 import           Data.List
 import qualified Data.Map                as Map
+import           Data.Maybe
 import           Data.String.Interpolate
 import           Data.Tree
 import           Debug.Trace
@@ -26,20 +27,20 @@ data StructureLeaf = Concept
     , getName        :: String
     , getHeadingMeta :: HeadingMeta
     , contents       :: [Block]
-    } deriving (Show,Eq)
+    } deriving (Ord,Eq)
 
 type Structure = Tree StructureLeaf
 
 data InternalDeck = ID
-    { getMapName   :: Maybe String
-    , getAuthor    :: Maybe String
+    { getTitle     :: String
+    , getAuthor    :: String
+    , getCardLevel :: Integer
     , getStructure :: Structure
     , otherMeta    :: String -> Maybe String
     }
 
 getDeckName :: InternalDeck -> String
-getDeckName (ID (Just n) _ _ _) = n
-getDeckName (ID _ _ _ _) = "No name"
+getDeckName = getTitle
 
 type Chunk = (Block, [Block])
 
@@ -113,8 +114,14 @@ getChunks (Pandoc _ bs) = foldl (flip add) [] bs
 
 parseDeck :: Pandoc -> InternalDeck
 parseDeck x@(Pandoc meta _) =
-    ID (getMV "title") (getMV "author") (parseChunks $ getChunks x) getMV
+    ID
+        (gm "title")
+        (gm "author")
+        (read $ fromMaybe "1" (getMV "level"))
+        (parseChunks $ getChunks x)
+        getMV
   where
+    gm k = fromMaybe "NA" $ getMV k
     getMV k =
         case Map.lookup k (unMeta meta) of
             Just (MetaInlines mi) -> Just $ asPlainString mi

@@ -62,10 +62,49 @@ reqAll =
     fromList
         [Array $ fromList [Number 0, String "all", Array $ fromList [Number 0]]]
 
+leCSS =
+    [i|
+ html {
+    line-height: 2;
+    font-size: 20px;
+    text-align: left;
+    font-family: Fira sans;
+}
+
+img {
+    vertical-align: middle;
+}
+
+.card {
+    background: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    margin: auto;
+    width: 90%;
+    border: 1px solid white;
+    border-radius: 7px;
+}
+
+.front {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 400;
+    font-size: 45px;
+    padding: 15px;
+}
+
+.back {
+    font-weight: 100;
+    padding: 40px 0px 40px 0px;
+    color: #fff;
+    font-size: 38px;
+}
+
+|]
+
 instance Default NoteModel where
     def =
         NM
-            ".card {\n font-familiy: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n background-color: white;\n}"
+            leCSS
             [nmf_def_front, nmf_def_back]
             "\\end{document}"
             "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n"

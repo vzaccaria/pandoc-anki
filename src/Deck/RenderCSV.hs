@@ -27,3 +27,5 @@ renderFileCSV s =
     let (Node _ ctxs) = getStructure $ parseDeck $ processPandoc $ readDoc s
         s' = intercalate "\n" (map renderContextCSV ctxs)
     in "Front;Back\n" ++ s'
+
+renderInternal s = _drawAsForest s

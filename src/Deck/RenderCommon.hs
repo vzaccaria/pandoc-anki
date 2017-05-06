@@ -7,6 +7,7 @@ module Deck.RenderCommon where
 import           Data.List
 import           Data.List.Split
 import qualified Data.Map                as Map
+import           Data.Maybe
 import           Data.String.Interpolate
 import           Data.Tree
 import           Deck.Parse
@@ -33,10 +34,19 @@ unLines s = intercalate "" $ splitOn "\n" s
 renderLeaf :: StructureLeaf -> String
 renderLeaf l = unLines (processLeafContents . contents $ l)
 
-_drawAsForest :: String -> IO ()
+showDeck :: InternalDeck -> String
+showDeck d = drawTree $ fmap showSL (getStructure d)
+
+showSL :: StructureLeaf -> String
+showSL s = getName s ++ ": " ++ renderLeaf s
+
+_drawAsForest :: String -> String
 _drawAsForest f =
-    let s :: Structure
-        s = getStructure $ parseDeck $ processPandoc $ readDoc f
-        t = fmap show s
-        t' = drawTree t
-    in putStrLn t'
+    let d = parseDeck $ processPandoc $ readDoc f
+        author = getAuthor d
+        title = getTitle d
+        content = showDeck d
+        l = show (getCardLevel d)
+    in [i|#{title} - #{author} (encoding cards from level #{l} downwards (Root = 0))
+#{content}
+       |]

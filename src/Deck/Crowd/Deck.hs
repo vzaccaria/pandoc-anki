@@ -32,6 +32,9 @@ data Deck = D
     , d_uuid        :: String
     } deriving (Show,Generic,Eq)
 
+d_dumpString :: Deck -> String
+d_dumpString d = BL.unpack $ encodePretty (d_decorate d)
+
 d_dump :: Deck -> IO ()
 d_dump d = BL.putStrLn $ encodePretty (d_decorate d)
 

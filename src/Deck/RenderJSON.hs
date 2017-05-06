@@ -9,50 +9,45 @@ import           Data.List.Split
 import qualified Data.Map                as Map
 import           Data.String.Interpolate
 import           Data.Tree
+import           Deck.Crowd.Deck
+import           Deck.Crowd.Note
+import           Deck.Crowd.NoteModel
 import           Deck.Parse
+import           Deck.RenderCommon
 import           Text.Pandoc
 import           Text.Pandoc.Walk        (walk)
 import           Utils
 
-processLeafContents :: [Block] -> String
-processLeafContents b = writeHtmlString def (Pandoc (Meta Map.empty) b)
-
-processInline :: Inline -> Inline
-processInline (Math _ x) = Str [i|[latex]$#{x}$[/latex]|]
-processInline x = x
-
-processBlock :: Block -> Block
-processBlock = walk processInline
-
-processPandoc :: Pandoc -> Pandoc
-processPandoc = walk processBlock
-
-unLines :: String -> String
-unLines s = intercalate "" $ splitOn "\n" s
-
-renderLeaf :: StructureLeaf -> String
-renderLeaf l = unLines (processLeafContents . contents $ l)
-
-renderCard :: String -> Structure -> String
-renderCard _ (Node q [Node a _]) =
+renderCardJSON :: Structure -> Note
+renderCardJSON (Node q [Node a _]) =
     let q' = renderLeaf q
         a' = renderLeaf a
-    in [i|#{q'};#{a'}\n|]
-renderCard _ _ = error "Invalid syntax for card"
+    in N [q', a'] 0 (def :: NoteModel) [] ""
 
-renderContext :: Structure -> String
-renderContext (Node ctx cards) = concatMap (renderCard (getName ctx)) cards
+renderStructure :: Integer -> Integer -> InternalDeck -> Structure -> Deck
+renderStructure curlev cardlev idk s =
+    if curlev == (cardlev - 1)
+        then let (Node concept childs) = s
+                 name = getName concept
+                 notes = map renderCardJSON childs
+             in (def :: Deck)
+                { d_notes = notes
+                , d_name = name
+                }
+        else let (Node concept childs) = s
+                 name =
+                     if (curlev == 0)
+                         then getTitle idk
+                         else getName concept
+                 decks = map (renderStructure (curlev + 1) cardlev idk) childs
+             in (def :: Deck)
+                { d_children = decks
+                , d_name = name
+                }
 
-_drawAsForest :: String -> IO ()
-_drawAsForest f =
-    let s :: Structure
-        s = getStructure $ parseDeck $ processPandoc $ readDoc f
-        t = fmap show s
-        t' = drawTree t
-    in putStrLn t'
+renderInternalDeck :: InternalDeck -> Deck
+renderInternalDeck d = renderStructure 0 (getCardLevel d) d $ getStructure d
 
-renderFileCSV :: String -> String
-renderFileCSV s =
-    let (Node _ ctxs) = getStructure $ parseDeck $ processPandoc $ readDoc s
-        s' = intercalate "\n" (map renderContext ctxs)
-    in "Front;Back\n" ++ s'
+renderFileJSON :: String -> String
+renderFileJSON s =
+    d_dumpString $ renderInternalDeck $ parseDeck $ processPandoc $ readDoc s

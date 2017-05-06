@@ -11,11 +11,12 @@ progUsage =
 pandoc-anki
 
 Usage:
-    pandoc-anki FILE [-j]
+    pandoc-anki FILE [-j | -i]
     pandoc-anki --help | -h
     pandoc-anki --version
 
 Options:
+    -i, --internal         Dump internal tree representation
     -j, --json             Output JSON suitable for CrowdAnki
     -h, --help             Show help
     --version              Show version.
