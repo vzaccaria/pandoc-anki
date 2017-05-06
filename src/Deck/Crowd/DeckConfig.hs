@@ -28,7 +28,7 @@ import           Utils
 data DeckConfig = Base
     { dc_uuid :: String
     , dc_name :: String
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 instance ToJSON DeckConfig where
     toJSON dc =

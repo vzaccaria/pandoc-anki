@@ -30,7 +30,7 @@ data NoteModel = NM
     , nm_tags      :: [String]
     , nm_tmpls     :: [NoteTmpl]
     , nm_uuid      :: String
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 data NoteTmpl = NT
     { nt_questionFormat :: String
@@ -41,7 +41,7 @@ data NoteTmpl = NT
     , nt_bSize          :: Integer
     , nt_bqfmt          :: String
     , nt_bafmt          :: String
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 data NoteModelField = NMF
     { nmf_font   :: String
@@ -51,7 +51,7 @@ data NoteModelField = NMF
     , nmf_rtl    :: Bool
     , nmf_size   :: Integer
     , nmf_sticky :: Bool
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 nmf_def_front = NMF "Arial" [] "Front" 0 False 20 False
 

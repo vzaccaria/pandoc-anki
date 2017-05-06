@@ -30,10 +30,18 @@ data Deck = D
     , d_desc        :: String
     , d_deckconfig  :: DeckConfig
     , d_uuid        :: String
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 d_dump :: Deck -> IO ()
 d_dump d = BL.putStrLn $ encodePretty (d_decorate d)
+
+getAllDeckConfig :: Deck -> [DeckConfig]
+getAllDeckConfig d =
+    concatMap getAllDeckConfig (d_children d) ++ [d_deckconfig d]
+
+getAllNoteModels :: Deck -> [NoteModel]
+getAllNoteModels d =
+    concatMap getAllNoteModels (d_children d) ++ d_note_models d
 
 d_decorate :: Deck -> Deck
 d_decorate d = runIdentity $ evalRandT (annoteDeck d) (mkStdGen 1)
@@ -51,14 +59,14 @@ instance ToJSON Deck where
             , "children" .= d_children d
             , "crowdanki_uuid" .= d_uuid d
             , "deck_config_uuid" .= dc_uuid (d_deckconfig d)
-            , "deck_configurations" .= [d_deckconfig d]
+            , "deck_configurations" .= (nub $ getAllDeckConfig d)
             , "desc" .= d_desc d
             , "dyn" .= d_dyn d
             , "extendNew" .= d_extendNew d
             , "extendRev" .= d_extendRev d
             , "media_files" .= d_media_files d
             , "name" .= d_name d
-            , "note_models" .= d_note_models d
+            , "note_models" .= (nub $ getAllNoteModels d)
             , "notes" .= d_notes d]
 
 instance Default Deck where
@@ -78,6 +86,7 @@ instance Default Deck where
 annoteDeck :: Deck -> UUIDGen Deck
 annoteDeck d = do
     dc <- finalizeDeckConfig (d_deckconfig d)
+    ch <- mapM annoteDeck (d_children d)
     ns <- mapM finalizeNote (d_notes d)
     du <- getRandomUUID
     return
@@ -85,4 +94,5 @@ annoteDeck d = do
         { d_notes = ns
         , d_deckconfig = dc
         , d_uuid = du
+        , d_children = ch
         }

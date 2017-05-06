@@ -17,7 +17,7 @@ data Note = N
     , n_note_model :: NoteModel
     , n_tags       :: [String]
     , n_guid       :: String
-    } deriving (Show,Generic)
+    } deriving (Show,Generic,Eq)
 
 instance ToJSON Note where
     toJSON d =

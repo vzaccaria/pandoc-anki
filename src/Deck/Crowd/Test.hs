@@ -22,10 +22,23 @@ n1 = N ["Q:What is a?", "Just this"] 0 (def :: NoteModel) [] ""
 n2 :: Note
 n2 = N ["Q:What is b?", "Just this"] 0 (def :: NoteModel) [] ""
 
+d2 :: Deck
+d2 =
+    (def :: Deck)
+    { d_notes = [n1]
+    , d_name = "Deck 1"
+    }
+
+d1 :: Deck
+d1 =
+    (def :: Deck)
+    { d_notes = [n2]
+    , d_name = "Deck 1"
+    }
+
 dr :: Deck
 dr =
     (def :: Deck)
-    { d_notes = [n1, n2]
-    , d_name = "My Decks :: Deck 1"
-    , d_desc = "Desc. Deck 1"
+    { d_children = [d1, d2]
+    , d_name = "Cippa Lippa"
     }
