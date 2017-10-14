@@ -20,9 +20,10 @@ dispatchOptions usage' =
             opts <- parseArgsOrExit usage' =<< getArgs
             file <- getArgOrExitWith usage' opts (argument "FILE")
             f <- readFile file
+            renderedFile <- renderFileJSON f
             putStrLn $
                 if wantsJson opts
-                    then renderFileJSON f
+                    then renderedFile
                     else if wantsInternal opts
                              then renderInternal f
                              else renderFileCSV f

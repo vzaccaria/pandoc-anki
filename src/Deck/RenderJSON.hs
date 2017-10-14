@@ -48,6 +48,6 @@ renderStructure curlev cardlev idk s =
 renderInternalDeck :: InternalDeck -> Deck
 renderInternalDeck d = renderStructure 0 (getCardLevel d) d $ getStructure d
 
-renderFileJSON :: String -> String
+renderFileJSON :: String -> IO String
 renderFileJSON s =
-    d_dumpString $ renderInternalDeck $ parseDeck $ processPandoc $ readDoc s
+    d_dumpStringIO $ renderInternalDeck $ parseDeck $ processPandoc $ readDoc s

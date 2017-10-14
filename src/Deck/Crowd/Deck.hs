@@ -32,6 +32,11 @@ data Deck = D
     , d_uuid        :: String
     } deriving (Show,Generic,Eq)
 
+d_dumpStringIO :: Deck -> IO String
+d_dumpStringIO d = do
+    dd <- d_decorateIO d
+    return $ BL.unpack $ encodePretty dd
+
 d_dumpString :: Deck -> String
 d_dumpString d = BL.unpack $ encodePretty (d_decorate d)
 
@@ -48,6 +53,11 @@ getAllNoteModels d =
 
 d_decorate :: Deck -> Deck
 d_decorate d = runIdentity $ evalRandT (annoteDeck d) (mkStdGen 1)
+
+d_decorateIO :: Deck -> IO Deck
+d_decorateIO d = do
+    s <- getStdGen
+    return $ runIdentity $ evalRandT (annoteDeck d) s
 
 d_note_models :: Deck -> [NoteModel]
 d_note_models d =
