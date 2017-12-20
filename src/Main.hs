@@ -3,8 +3,9 @@
 module Main where
 
 import qualified Data.Text                  as T
-import           Deck.RenderCSV
-import           Deck.RenderJSON
+import qualified Deck.CrowdAnki.Render      as CA
+import qualified Deck.CSV.Render            as CSV
+import qualified Deck.Internal.Render       as I
 import           System.Console.Docopt.NoTH
 import           System.Environment         (getArgs)
 import           UsageCLI                   (progUsage)
@@ -20,13 +21,13 @@ dispatchOptions usage' =
             opts <- parseArgsOrExit usage' =<< getArgs
             file <- getArgOrExitWith usage' opts (argument "FILE")
             f <- readFile file
-            renderedFile <- renderFileJSON f
+            renderedFile <- CA.render f
             putStrLn $
                 if wantsJson opts
                     then renderedFile
                     else if wantsInternal opts
-                             then renderInternal f
-                             else renderFileCSV f
+                             then I.render f
+                             else CSV.render f
     in prog
 
 main :: IO ()

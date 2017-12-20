@@ -5,9 +5,11 @@
 module Deck.Parse where
 
 import           Control.Monad.Supply
-import           Data.Char               (toLower)
+import           Data.Aeson
+import           Data.Aeson.Encode.Pretty
+import           Data.Char                (toLower)
 import           Data.List
-import qualified Data.Map                as Map
+import qualified Data.Map                 as Map
 import           Data.Maybe
 import           Data.String.Interpolate
 import           Data.Tree
@@ -16,7 +18,7 @@ import           System.Directory
 import           System.Process
 import           Text.Pandoc
 import           Text.Pandoc.Error
-import           Text.Pandoc.Walk        (walk)
+import           Text.Pandoc.Walk         (walk)
 import           Utils
 
 type HeadingMeta = Map.Map String String
@@ -29,6 +31,9 @@ data StructureLeaf = Concept
     , contents       :: [Block]
     } deriving (Ord,Eq)
 
+instance ToJSON StructureLeaf where
+    toJSON s = object ["contents" .= processLeafContents (contents s)]
+
 type Structure = Tree StructureLeaf
 
 data InternalDeck = ID
@@ -39,8 +44,18 @@ data InternalDeck = ID
     , otherMeta    :: String -> Maybe String
     }
 
+instance ToJSON InternalDeck where
+    toJSON d =
+        object
+            [ "title" .= getTitle d
+            , "author" .= getAuthor d
+            , "root" .= toJSON (getStructure d)]
+
 getDeckName :: InternalDeck -> String
 getDeckName = getTitle
+
+processLeafContents :: [Block] -> String
+processLeafContents b = writeHtmlString def (Pandoc (Meta Map.empty) b)
 
 type Chunk = (Block, [Block])
 

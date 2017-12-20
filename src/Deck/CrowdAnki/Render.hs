@@ -1,21 +1,20 @@
 {-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.RenderJSON where
+module Deck.CrowdAnki.Render where
 
 import           Data.List
 import           Data.List.Split
-import qualified Data.Map                as Map
+import qualified Data.Map                 as Map
 import           Data.String.Interpolate
 import           Data.Tree
-import           Deck.Crowd.Deck
-import           Deck.Crowd.Note
-import           Deck.Crowd.NoteModel
+import           Deck.CrowdAnki.Deck
+import           Deck.CrowdAnki.Note
+import           Deck.CrowdAnki.NoteModel
 import           Deck.Parse
 import           Deck.RenderCommon
 import           Text.Pandoc
-import           Text.Pandoc.Walk        (walk)
+import           Text.Pandoc.Walk         (walk)
 import           Utils
 
 renderCardJSON :: Structure -> Note
@@ -45,9 +44,9 @@ renderStructure curlev cardlev idk s =
                 , d_name = name
                 }
 
-renderInternalDeck :: InternalDeck -> Deck
-renderInternalDeck d = renderStructure 0 (getCardLevel d) d $ getStructure d
+internalDeckToDeck :: InternalDeck -> Deck
+internalDeckToDeck d = renderStructure 0 (getCardLevel d) d $ getStructure d
 
-renderFileJSON :: String -> IO String
-renderFileJSON s =
-    d_dumpStringIO $ renderInternalDeck $ parseDeck $ processPandoc $ readDoc s
+render :: String -> IO String
+render s =
+    d_dumpStringIO $ internalDeckToDeck $ parseDeck $ processPandoc $ readDoc s

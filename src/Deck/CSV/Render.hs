@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.RenderCSV where
+module Deck.CSV.Render where
 
 import           Data.List
 import           Data.String.Interpolate
@@ -22,10 +22,8 @@ renderContextCSV :: Structure -> String
 renderContextCSV (Node ctx cards) =
     concatMap (renderCardCSV (getName ctx)) cards
 
-renderFileCSV :: String -> String
-renderFileCSV s =
+render :: String -> String
+render s =
     let (Node _ ctxs) = getStructure $ parseDeck $ processPandoc $ readDoc s
         s' = intercalate "\n" (map renderContextCSV ctxs)
     in "Front;Back\n" ++ s'
-
-renderInternal s = _drawAsForest s

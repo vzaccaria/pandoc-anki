@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.Crowd.Deck where
+module Deck.CrowdAnki.Deck where
 
 import           Control.Monad.Identity
 import           Control.Monad.Random
@@ -13,9 +13,9 @@ import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
 import           Data.Default
 import           Data.List
-import           Deck.Crowd.DeckConfig
-import           Deck.Crowd.Note
-import           Deck.Crowd.NoteModel
+import           Deck.CrowdAnki.DeckConfig
+import           Deck.CrowdAnki.Note
+import           Deck.CrowdAnki.NoteModel
 import           GHC.Generics
 import           Utils
 
@@ -70,7 +70,7 @@ instance ToJSON Deck where
         object
             [ "__type__" .= ("Deck" :: String)
             , "children" .= d_children d
-            , "crowdanki_uuid" .= d_uuid d
+            , "crowdAnkianki_uuid" .= d_uuid d
             , "deck_config_uuid" .= dc_uuid (d_deckconfig d)
             , "deck_configurations" .= (nub $ getAllDeckConfig d)
             , "desc" .= d_desc d

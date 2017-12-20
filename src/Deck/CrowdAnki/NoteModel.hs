@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.Crowd.NoteModel where
+module Deck.CrowdAnki.NoteModel where
 
 import           Data.Aeson
 import qualified Data.ByteString.Lazy    as BL
