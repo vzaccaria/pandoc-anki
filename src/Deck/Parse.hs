@@ -1,47 +1,49 @@
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Deck.Parse where
 
-import           Control.Monad.Supply
-import           Data.Aeson
-import           Data.Aeson.Encode.Pretty
-import           Data.Char                (toLower)
-import           Data.List
-import qualified Data.Map                 as Map
-import           Data.Maybe
-import           Data.String.Interpolate
-import           Data.Tree
-import           Debug.Trace
-import           System.Directory
-import           System.Process
-import           Text.Pandoc
-import           Text.Pandoc.Error
-import           Text.Pandoc.Walk         (walk)
-import           Utils
+import Control.Monad.Supply
+import Data.Aeson
+import Data.Aeson.Encode.Pretty
+import Data.Char (toLower)
+import Data.List
+import qualified Data.ByteString.Lazy.Char8 as BL
+import qualified Data.Map as Map
+import Data.Maybe
+import Data.String.Interpolate
+import Data.Tree
+import Debug.Trace
+import System.Directory
+import System.Process
+import qualified Data.Text as T
+import Text.Pandoc
+import Text.Pandoc.Error
+import Text.Pandoc.Walk (walk)
+import Utils
 
 type HeadingMeta = Map.Map String String
 
 data StructureLeaf = Concept
-    { getID          :: String
-    , getUID         :: Integer
-    , getName        :: String
+    { getID :: String
+    , getUID :: Integer
+    , getName :: String
     , getHeadingMeta :: HeadingMeta
-    , contents       :: [Block]
+    , contents :: [Block]
     } deriving (Ord,Eq)
 
 instance ToJSON StructureLeaf where
-    toJSON s = object ["contents" .= processLeafContents (contents s)]
+    toJSON s = String $ T.pack $ processLeafContents (contents s)
 
 type Structure = Tree StructureLeaf
 
 data InternalDeck = ID
-    { getTitle     :: String
-    , getAuthor    :: String
+    { getTitle :: String
+    , getAuthor :: String
     , getCardLevel :: Integer
     , getStructure :: Structure
-    , otherMeta    :: String -> Maybe String
+    , otherMeta :: String -> Maybe String
     }
 
 instance ToJSON InternalDeck where

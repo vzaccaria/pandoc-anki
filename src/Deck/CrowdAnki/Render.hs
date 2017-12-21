@@ -1,34 +1,39 @@
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Deck.CrowdAnki.Render where
 
-import           Data.List
-import           Data.List.Split
-import qualified Data.Map                 as Map
-import           Data.String.Interpolate
-import           Data.Tree
-import           Deck.CrowdAnki.Deck
-import           Deck.CrowdAnki.Note
-import           Deck.CrowdAnki.NoteModel
-import           Deck.Parse
-import           Deck.RenderCommon
-import           Text.Pandoc
-import           Text.Pandoc.Walk         (walk)
-import           Utils
+import Data.List
+import Data.List.Split
+import Data.Maybe
+import qualified Data.Map as Map
+import Data.String.Interpolate
+import Data.Tree
+import Deck.CrowdAnki.Deck
+import Deck.CrowdAnki.Note
+import Deck.CrowdAnki.NoteModel
+import Deck.Parse
+import Deck.RenderCommon
+import Text.Pandoc
+import Text.Pandoc.Walk (walk)
+import Utils
 
-renderCardJSON :: Structure -> Note
+renderCardJSON :: Structure -> Maybe Note
 renderCardJSON (Node q _) =
     let q' = getName q
         a' = renderLeaf q
-    in N [q', a'] 0 (def :: NoteModel) [] ""
+        note = N [q', a'] 0 (def :: NoteModel) [] ""
+        opt = Map.lookup "noanki" (getHeadingMeta q)
+    in case opt of
+           Just _ -> Nothing
+           Nothing -> Just note
 
 renderStructure :: Integer -> Integer -> InternalDeck -> Structure -> Deck
 renderStructure curlev cardlev idk s =
     if curlev == (cardlev - 1)
         then let (Node concept childs) = s
                  name = getName concept
-                 notes = map renderCardJSON childs
+                 notes = mapMaybe renderCardJSON childs
              in (def :: Deck)
                 { d_notes = notes
                 , d_name = name

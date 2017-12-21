@@ -1,10 +1,10 @@
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Deck.Internal.Render where
 
-import           Deck.RenderCommon
+import Deck.RenderCommon
 
 render :: String -> String
-render = _printAsJson
+render = _drawAsForest

@@ -11,67 +11,67 @@
 
 ** Semigroups
 *** Semigroup
-   
+
    A [[https://en.wikipedia.org/wiki/Semigroup][semigroup]] is a set equipped with one binary operation (*) that satisfies:
 
-   - *closure* 
+   - *closure*
    - *associativity*
 
 ** Monoids
 *** Monoid
-   
+
    A monoid is a semigroup with a unit element (1), while the (*) operation satisfies:
-   
+
    - *identity*: $a * 1 = a$.
 
 ** Groups
 *** Introduction
-   
+
    A [[https://en.wikipedia.org/wiki/Group_(mathematics)][group]] is a monoid where for all elements $a$, the (*) operation satisfies:
 
    - *invertibility*: $a * a^{-1} = 1$.
-   - *associativity*: $a * (b * c) = (a * b) * c$ 
+   - *associativity*: $a * (b * c) = (a * b) * c$
 
    In a group, every element has its own inverse.
 
-*** Subgroup  
+*** Subgroup
    A [[https://en.wikipedia.org/wiki/Subgroup][subgroup]] of $G$ is a subset $H$ of $G$ is called a subgroup of $G$ if $H$ also forms
    a group under the operation *.
 
    The *trivial subgroup* of any group is the subgroup ${e}$ consisting of just the identity element.
 
-*** Coset 
+*** Coset
     Given a subgroup $H$ and some $a$ in $G$, we define the *left coset* of $H$ as
     $aH = \{ah : h \in H\}$. We have some properties holding:
 
     - each $a$ generates a subset of $G$ and, considering all the elements $a$
       of $G$, the corresponding set of cosets of $H$ is a partition of $G$.
 
-    - all cosets of H have the same amount of elements (which is the same number of element of H). 
+    - all cosets of H have the same amount of elements (which is the same number of element of H).
 
     - because the family of cosets is a partition, the size of $G$ is a multiple of $H$ and its cosets.
-    
-** Semiring  
-*** Introduction 
+
+** Semiring
+*** Introduction
     A [[https://en.wikipedia.org/wiki/Semiring][semiring]] $R$ consists of a set equipped with two binary operations that generalize
     the arithmetic operations of addition and multiplication:
-  
+
     - (R, +) is a commutative monoid with identity = 0 (note, not a group, it
       should not have an inverse).
     - (R, *) is a monoid with identity = 1
     - multiplication distributes over addition
     - multiplication by 0 gives 0 (annihilates).
-   
-** Rings 
-*** Introduction 
+
+** Rings
+*** Introduction
 
     A [[https://en.wikipedia.org/wiki/Ring_(mathematics)][ring]] consists of a set equipped with two binary operations that generalize
     the arithmetic operations of:
-    
-    - *addition* and 
+
+    - *addition* and
     - *multiplication*.
 
-*** Ideals 
+*** Ideals
     An *ideal* $I$ is a special subset of a ring $R$ that respects the following properties:
 
     - closure: summing two elements of $I$ gives another element of $I$.
@@ -80,19 +80,19 @@
 
     Example: the even numbers are an ideal of the natural numbers
 
-** Field 
+** Field
 
-*** Introduction 
+*** Introduction
 
     A [[https://en.wikipedia.org/wiki/Field_(mathematics)][field]] a set on which are defined addition, subtraction, multiplication,
     and *division*, such that they behave as they do when applied to rational and
     real numbers.
 
-* Algebras  
+* Algebras
 
-** Vector spaces 
-*** Introduction 
-    
+** Vector spaces
+*** Introduction
+
     Set of elements (called *vectors*) which can be added together and multiplied
     by scalars (i.e., elements of a field $K$). So, both addition and scalar
     multiplication should be defined. Subtraction and division come from scalars.
@@ -103,29 +103,31 @@
     Classical results of geometry apply.
 
 *** Normed vector spaces
-    
-    A *normed* vector space $V$ is endowed with a map $V \rightarrow R$. 
 
-*** Inner product spaces 
-    
+    A *normed* vector space $V$ is endowed with a map $V \rightarrow R$.
+
+*** Inner product spaces
+
     An *inner product* space $V$ is endowed with an operation $V \times V \rightarrow R$.
 
 *** Algebra over a field
+    :PROPERTIES:
+    :noanki: true
+    :END:
 
     It is a vector space equipped with a bi-linear operator acting as *multiplication* between vectors.
 
-    Examples: 
-    
+    Examples:
+
     - $R^3$ with cross-product $\times$
 
-*** Tensor algebra 
-   
+*** Tensor algebra
+
     Multiplication is just a concatenation of symbols. [[https://en.wikipedia.org/wiki/Algebra_over_a_field][(wikipedia)]]
 
-** Modules 
+** Modules
 
-*** Introduction 
+*** Introduction
 
     Generalization of vector space. Elements can still be added together and can
-    be "multiplied" with elements of a ring (instead of a field). 
-  
+    be "multiplied" with elements of a ring (instead of a field).
