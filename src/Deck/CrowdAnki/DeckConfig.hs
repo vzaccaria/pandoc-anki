@@ -1,29 +1,29 @@
-{-# LANGUAGE DeriveAnyClass    #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Deck.CrowdAnki.DeckConfig where
 
-import qualified Control.Monad.Random       as R
-import           Data.Aeson
-import           Data.Aeson.Encode.Pretty
+import qualified Control.Monad.Random as R
+import Data.Aeson
+import Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
-import           Data.Default
-import           Data.List
-import           Data.List.Split
-import qualified Data.Map                   as Map
-import           Data.String.Interpolate
-import           Data.Tree
-import           Data.UUID
-import           Deck.CrowdAnki.Note
-import           Deck.CrowdAnki.NoteModel
-import           GHC.Exts
-import           GHC.Generics
-import           Text.Pandoc
-import           Text.Pandoc.Walk           (walk)
-import           Utils
+import Data.Default
+import Data.List
+import Data.List.Split
+import qualified Data.Map as Map
+import Data.String.Interpolate
+import Data.Tree
+import Data.UUID
+import Deck.CrowdAnki.Note
+import Deck.CrowdAnki.NoteModel
+import GHC.Exts
+import GHC.Generics
+import Text.Pandoc
+import Text.Pandoc.Walk (walk)
+import Utils
 
 data DeckConfig = Base
     { dc_uuid :: String
@@ -64,7 +64,7 @@ instance ToJSON DeckConfig where
                   , "ivlFct" .= Number 1
                   , "maxIvl" .= Number 36500
                   , "minSpace" .= Number 1
-                  , "perDay" .= Number 100]
+                  , "perDay" .= Number 20]
             , "timer" .= Number 0]
 
 finalizeDeckConfig :: DeckConfig -> UUIDGen DeckConfig
