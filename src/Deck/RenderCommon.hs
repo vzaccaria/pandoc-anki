@@ -1,22 +1,22 @@
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Deck.RenderCommon where
 
-import           Data.Aeson
-import           Data.Aeson.Encode.Pretty
+import Data.Aeson
+import Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
-import           Data.List
-import           Data.List.Split
-import qualified Data.Map                   as Map
-import           Data.Maybe
-import           Data.String.Interpolate
-import           Data.Tree
-import           Deck.Parse
-import           Text.Pandoc
-import           Text.Pandoc.Walk           (walk)
-import           Utils
+import Data.List
+import Data.List.Split
+import qualified Data.Map as Map
+import Data.Maybe
+import Data.String.Interpolate
+import Data.Tree
+import Deck.Parse
+import Text.Pandoc
+import Text.Pandoc.Walk (walk)
+import Utils
 
 processInline :: Inline -> Inline
 processInline (Math _ x) = Str [i|[latex]$#{x}$[/latex]|]
@@ -55,3 +55,9 @@ _printAsJson :: String -> String
 _printAsJson f =
     let d = parseDeck $ processPandoc $ readDoc f
     in BL.unpack $ encodePretty d
+
+renderAsInternal :: InternalDeck -> IO String
+renderAsInternal x = return $ showDeck x
+
+parseOrg :: String -> InternalDeck
+parseOrg f = parseDeck $ processPandoc $ readDoc f

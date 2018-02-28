@@ -1,9 +1,11 @@
 {-# LANGUAGE QuasiQuotes #-}
 
-module UsageCLI (progUsage) where
+module UsageCLI
+  (progUsage)
+  where
 
-import           System.Console.Docopt
-import           System.Environment    (getArgs)
+import System.Console.Docopt
+import System.Environment (getArgs)
 
 progUsage :: Docopt
 progUsage =
@@ -11,12 +13,13 @@ progUsage =
 pandoc-anki
 
 Usage:
-    pandoc-anki FILE [-j | -i]
+    pandoc-anki FILE [-j | -i] [-f]
     pandoc-anki --help | -h
     pandoc-anki --version
 
 Options:
     -i, --internal         Dump internal tree representation
+    -f, --flatten          Remove all hierarchies
     -j, --json             Output JSON suitable for CrowdAnki
     -h, --help             Show help
     --version              Show version.

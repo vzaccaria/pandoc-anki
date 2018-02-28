@@ -52,6 +52,5 @@ renderStructure curlev cardlev idk s =
 internalDeckToDeck :: InternalDeck -> Deck
 internalDeckToDeck d = renderStructure 0 (getCardLevel d) d $ getStructure d
 
-render :: String -> IO String
-render s =
-    d_dumpStringIO $ internalDeckToDeck $ parseDeck $ processPandoc $ readDoc s
+renderAsCrowdAnki :: InternalDeck -> IO String
+renderAsCrowdAnki d = d_dumpStringIO $ internalDeckToDeck d

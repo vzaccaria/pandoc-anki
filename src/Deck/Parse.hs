@@ -143,3 +143,23 @@ parseDeck x@(Pandoc meta _) =
         case Map.lookup k (unMeta meta) of
             Just (MetaInlines mi) -> Just $ asPlainString mi
             _ -> Nothing
+
+singletonTree :: StructureLeaf -> Structure
+singletonTree a = Node a []
+
+nemptyLeaf :: StructureLeaf -> Bool
+nemptyLeaf s = length (contents s) > 0
+
+listOfSingletons :: [StructureLeaf] -> Structure
+listOfSingletons as =
+    Node (Concept "root" 0 "Root" Map.empty []) $
+    map singletonTree $ (filter nemptyLeaf as)
+
+flattenTree :: Structure -> Structure
+flattenTree t = listOfSingletons (flatten t)
+
+flattenDeck :: InternalDeck -> InternalDeck
+flattenDeck ideck =
+    ideck
+    { getStructure = (flattenTree $ getStructure ideck)
+    }
