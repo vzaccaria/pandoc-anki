@@ -2,9 +2,12 @@
 
 module Main where
 
+import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.Text as T
 import qualified Deck.CrowdAnki.Render as CA
 import qualified Deck.CSV.Render as CSV
+import Data.Aeson
+import Data.Aeson.Encode
 import Deck.Parse
 import Deck.RenderCommon
 import System.Console.Docopt.NoTH
@@ -33,11 +36,11 @@ dispatchOptions usage' =
             nt <- renderAsInternal $ fted
             cs <- CSV.renderAsCSV $ fted
             putStrLn $
-                if wantsJson opts
-                    then ca
-                    else if wantsInternal opts
-                             then nt
-                             else cs
+                case (wantsJson opts, wantsInternal opts) of
+                    (True,False) -> ca
+                    (False,True) -> nt
+                    (True,True) -> BL.unpack $ encode $ toJSON fted
+                    (False,False) -> cs
     in prog
 
 main :: IO ()

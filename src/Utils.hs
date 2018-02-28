@@ -2,19 +2,19 @@
 
 module Utils where
 
-import           Control.Monad.Identity
-import           Control.Monad.Random
-import           Data.Char              (ord, toLower)
-import qualified Data.Map               as Map
-import           Data.UUID
-import           Data.UUID.V5
-import           Data.Word
-import           Text.Pandoc
+import Control.Monad.Identity
+import Control.Monad.Random
+import Data.Char (ord, toLower)
+import qualified Data.Map as Map
+import Data.UUID
+import Data.UUID.V5
+import Data.Word
+import Text.Pandoc
 
 dasherize :: Inline -> String
 dasherize Space = "-"
 dasherize (Str s) = map toLower s
-dasherize _ = error "Invalid input to dasherize"
+dasherize _ = "OMITTED"
 
 readDoc :: String -> Pandoc
 readDoc s =

@@ -13,7 +13,7 @@ progUsage =
 pandoc-anki
 
 Usage:
-    pandoc-anki FILE [-j | -i] [-f]
+    pandoc-anki FILE [-j] [-i] [-f]
     pandoc-anki --help | -h
     pandoc-anki --version
 

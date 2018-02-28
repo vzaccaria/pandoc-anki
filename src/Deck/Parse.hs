@@ -1,6 +1,9 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Deck.Parse where
 
@@ -9,6 +12,7 @@ import Data.Aeson
 import Data.Aeson.Encode.Pretty
 import Data.Char (toLower)
 import Data.List
+import GHC.Generics
 import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.Map as Map
 import Data.Maybe
@@ -31,11 +35,12 @@ data StructureLeaf = Concept
     , getName :: String
     , getHeadingMeta :: HeadingMeta
     , contents :: [Block]
-    } deriving (Ord,Eq)
+    } deriving (Ord,Eq,Generic)
 
-instance ToJSON StructureLeaf where
-    toJSON s = String $ T.pack $ processLeafContents (contents s)
+instance ToJSON StructureLeaf
 
+-- instance ToJSON StructureLeaf where
+-- toJSON s = String $ T.pack $ processLeafContents (contents s)
 type Structure = Tree StructureLeaf
 
 data InternalDeck = ID
@@ -150,10 +155,14 @@ singletonTree a = Node a []
 nemptyLeaf :: StructureLeaf -> Bool
 nemptyLeaf s = length (contents s) > 0
 
+root xs = Node (Concept "root" 0 "Root" Map.empty []) $ xs
+
+deck xs = Node (Concept "deck" 0 "All cards" Map.empty []) $ xs
+
 listOfSingletons :: [StructureLeaf] -> Structure
-listOfSingletons as =
-    Node (Concept "root" 0 "Root" Map.empty []) $
-    map singletonTree $ (filter nemptyLeaf as)
+listOfSingletons as = root $ [deck cards]
+  where
+    cards = map singletonTree $ (filter nemptyLeaf as)
 
 flattenTree :: Structure -> Structure
 flattenTree t = listOfSingletons (flatten t)
@@ -162,4 +171,5 @@ flattenDeck :: InternalDeck -> InternalDeck
 flattenDeck ideck =
     ideck
     { getStructure = (flattenTree $ getStructure ideck)
+    , getCardLevel = 2
     }
