@@ -1,16 +1,16 @@
-
-
 # Prerequisites
 
-- Anki 2.0.47 
-- Anki Addon: Crowd Anki Importer 
-- Anki Addon: Edit Latex Build process 
+-   Anki 2.0.47
+-   Anki Addon: Crowd Anki Importer
 
-Use the following build process:
+# Optional prerequisites
 
-```python
-newLaTeX = \
-[
+If you need correct tikz output (e.g., tikz commutative diagrams), use
+the Anki Addon "Edit Latex Build process", with the following build
+process:
+
+``` python
+newLaTeX = [
   ["pdflatex", "-interaction=nonstopmode", "--shell-escape", "tmp.tex"]
 ]
 
@@ -20,13 +20,8 @@ import anki.latex
 anki.latex.latexCmds = newLaTeX
 ```
 
-# Possible fixes to errors:
+This needs imagemagick with the pdf convert delegate, otherwise you get
+a "convert: no decode delegate for this image format \`PDF'" error:
 
-## convert: no decode delegate for this image format `PDF'
-
-Try with:
-
-```
-brew remove imagemagick 
-brew install imagemagick --build-from-source
-```
+    brew remove imagemagick 
+    brew install imagemagick --build-from-source
