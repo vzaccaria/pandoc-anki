@@ -1,1 +1,0 @@
-/Users/zaccaria/dotfiles/org-headers/beamer_modern.org

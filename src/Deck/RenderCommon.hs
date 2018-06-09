@@ -1,29 +1,31 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Deck.RenderCommon where
 
-import Data.Aeson
-import Data.Aeson.Encode.Pretty
+import           Data.Aeson
+import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
-import Data.List
-import Data.List.Split
-import qualified Data.Map as Map
-import Data.Maybe
-import Data.String.Interpolate
-import Data.Tree
-import Deck.Parse
-import Text.Pandoc
-import Text.Pandoc.Walk (walk)
-import Utils
+import           Data.List
+import           Data.List.Split
+import qualified Data.Map                   as Map
+import           Data.Maybe
+import           Data.String.Interpolate
+import           Data.Tree
+import           Deck.Parse
+import           Text.Pandoc
+import           Text.Pandoc.Walk           (walk)
+import           Utils
 
 processInline :: Inline -> Inline
-processInline (Math _ x) = Str [i|[latex]$#{x}$[/latex]|]
+processInline (Math _ x) = Str [i|[$]#{x}[/$]|]
 processInline x = x
 
 processBlock :: Block -> Block
-processBlock = walk processInline
+processBlock (RawBlock (Format "latex") x) =
+    Plain [Str [i|[latex]#{x}[/latex]|]]
+processBlock b0 = walk processInline b0
 
 processPandoc :: Pandoc -> Pandoc
 processPandoc = walk processBlock

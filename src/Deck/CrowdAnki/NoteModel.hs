@@ -102,13 +102,26 @@ img {
 
 |]
 
+tikzLatex =
+    [i| \\providecommand{\\pgfsyspdfmark}[3]{}
+\\documentclass[convert={convertexe={convert}},border=2]{standalone}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{amssymb,amsmath}
+\\usepackage{xcolor}
+\\usepackage{tikz-cd}
+\\pagestyle{empty}
+\\begin{document}
+
+|]
+
 instance Default NoteModel where
     def =
         NM
             leCSS
             [nmf_def_front, nmf_def_back]
             "\\end{document}"
-            "\\documentclass[12pt]{article}\n\\special{papersize=3in,5in}\n\\usepackage[utf8]{inputenc}\n\\usepackage{amssymb,amsmath}\n\\pagestyle{empty}\n\\setlength{\\parindent}{0in}\n\\begin{document}\n"
+            tikzLatex
             "DefaultName"
             0
             []
