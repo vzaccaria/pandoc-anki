@@ -1,3 +1,13 @@
+> Produce an Anki deck from an org file
+
+# Installation and usage
+
+``` shell 
+stack build .
+stack install .
+pandoc-anki  # for help
+```
+
 # Prerequisites
 
 -   Anki 2.0.47
