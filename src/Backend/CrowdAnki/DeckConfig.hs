@@ -52,7 +52,7 @@ instance ToJSON DeckConfig where
                   , "delays" .= (Array $ fromList [Number 1, Number 10])
                   , "initialFactor" .= Number 2500
                   , "ints" .= (Array $ fromList [Number 1, Number 4, Number 7])
-                  , "order" .= Number 1
+                  , "order" .= Number 0
                   , "perDay" .= Number 20
                   , "separate" .= True]
             , "replayq" .= True
