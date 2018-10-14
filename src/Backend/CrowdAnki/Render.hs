@@ -22,11 +22,11 @@ import           Utils
 
 processLeafContentsAsLatex :: [Block] -> String
 processLeafContentsAsLatex b = 
-  let ltx = writeLaTeX def (Pandoc (Meta Map.empty) b)
-   in [i|[latex]#{ltx}[/latex]|]
+  let ltx = writeLaTeX def (Pandoc (Meta Map.empty) b) 
+   in "[latex]" ++ ltx ++"[/latex]"
 
 renderLeafAsLatex :: InternalDeckStructLeaf -> String
-renderLeafAsLatex l = unLines (processLeafContentsAsLatex . contents $ l)
+renderLeafAsLatex l = processLeafContentsAsLatex . contents $ l
 
 renderStructIntoNote :: InternalDeckStruct -> Maybe Note   
 renderStructIntoNote (Node q _) =

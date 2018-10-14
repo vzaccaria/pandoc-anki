@@ -64,55 +64,31 @@ reqAll =
 
 leCSS =
     [i|
- html {
-    line-height: 2;
-    font-size: 20px;
-    text-align: left;
-    font-family: Fira sans;
-}
-
-img {
-    vertical-align: middle;
-    -webkit-transform: scale(0.7, 0.7);
-}
-
-.card {
-    background: #fff;
-    background: rgba(255, 255, 255, 0.2);
-    margin: auto;
-    width: 90%;
-    border: 1px solid white;
-    border-radius: 7px;
-}
-
-.front {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.2);
-    font-weight: 400;
-    font-size: 45px;
-    padding: 15px;
-}
-
-.back {
-    font-weight: 100;
-    padding: 40px 0px 40px 0px;
-    color: #fff;
-    font-size: 38px;
-}
 
 |]
 
 tikzLatex =
-    [i| \\providecommand{\\pgfsyspdfmark}[3]{}
-\\documentclass[convert={convertexe={convert}},border=2]{standalone}
+    [i| \\documentclass[10pt]{article}
+\\usepackage[paperheight=8cm,paperwidth=11cm,margin=0.5cm]{geometry}
+
 \\usepackage[utf8]{inputenc}
 \\usepackage[T1]{fontenc}
+
+\\usepackage{libertine-type1}
+\\usepackage{biolinum-type1}
+\\usepackage{libertineMono-type1}
+\\usepackage[libertine]{newtxmath}
+
 \\usepackage{amssymb,amsmath}
 \\usepackage{xcolor}
 \\usepackage{tikz-cd}
 \\pagestyle{empty}
-\\begin{document}
 
+\\providecommand{\\tightlist}{%
+  \\setlength{\\itemsep}{0pt}\\setlength{\\parskip}{0pt}}
+
+
+\\begin{document}
 |]
 
 instance Default NoteModel where
