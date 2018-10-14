@@ -1,4 +1,4 @@
-module Deck.CrowdAnki.Test where
+module Backend.CrowdAnki.Test where
 
 import           Data.Aeson
 import qualified Data.ByteString.Lazy     as BL
@@ -8,9 +8,9 @@ import           Data.List.Split
 import qualified Data.Map                 as Map
 import           Data.String.Interpolate
 import           Data.Tree
-import           Deck.CrowdAnki.Deck
-import           Deck.CrowdAnki.Note
-import           Deck.CrowdAnki.NoteModel
+import           Backend.CrowdAnki.Deck
+import           Backend.CrowdAnki.Note
+import           Backend.CrowdAnki.NoteModel
 import           GHC.Generics
 import           Text.Pandoc
 import           Text.Pandoc.Walk         (walk)

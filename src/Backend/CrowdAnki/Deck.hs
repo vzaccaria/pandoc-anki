@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.CrowdAnki.Deck where
+module Backend.CrowdAnki.Deck where
 
 import           Control.Monad.Identity
 import           Control.Monad.Random
@@ -13,9 +13,9 @@ import           Data.Aeson.Encode.Pretty
 import qualified Data.ByteString.Lazy.Char8 as BL
 import           Data.Default
 import           Data.List
-import           Deck.CrowdAnki.DeckConfig
-import           Deck.CrowdAnki.Note
-import           Deck.CrowdAnki.NoteModel
+import           Backend.CrowdAnki.DeckConfig
+import           Backend.CrowdAnki.Note
+import           Backend.CrowdAnki.NoteModel
 import           GHC.Generics
 import           Utils
 

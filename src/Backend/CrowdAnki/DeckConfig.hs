@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
 
-module Deck.CrowdAnki.DeckConfig where
+module Backend.CrowdAnki.DeckConfig where
 
 import qualified Control.Monad.Random as R
 import Data.Aeson
@@ -17,8 +17,8 @@ import qualified Data.Map as Map
 import Data.String.Interpolate
 import Data.Tree
 import Data.UUID
-import Deck.CrowdAnki.Note
-import Deck.CrowdAnki.NoteModel
+import Backend.CrowdAnki.Note
+import Backend.CrowdAnki.NoteModel
 import GHC.Exts
 import GHC.Generics
 import Text.Pandoc

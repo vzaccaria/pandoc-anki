@@ -4,10 +4,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes       #-}
 
-module Deck.CrowdAnki.Note where
+module Backend.CrowdAnki.Note where
 
 import           Data.Aeson
-import           Deck.CrowdAnki.NoteModel
+import           Backend.CrowdAnki.NoteModel
 import           GHC.Generics
 import           Utils
 
