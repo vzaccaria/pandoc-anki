@@ -73,6 +73,7 @@ tikzLatex =
 
 \\usepackage[utf8]{inputenc}
 \\usepackage[T1]{fontenc}
+\\usepackage{longtable}
 
 \\usepackage{libertine-type1}
 \\usepackage{biolinum-type1}
