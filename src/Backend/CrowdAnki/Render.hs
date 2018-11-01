@@ -20,11 +20,19 @@ import           Text.Pandoc
 import           Text.Pandoc.Walk            (walk)
 import           Utils
 
-renderCardJSON :: InternalDeckStruct -> Maybe Note   
-renderCardJSON (Node q _) =
-  let q' = getName q 
-      a' = renderLeaf q
-      note = N [q', a'] 0 (def :: NoteModel) [] ""
+processLeafContentsAsLatex :: [Block] -> String
+processLeafContentsAsLatex b = 
+  let ltx = writeLaTeX def (Pandoc (Meta Map.empty) b) 
+   in "[latex]" ++ ltx ++"[/latex]"
+
+renderLeafAsLatex :: InternalDeckStructLeaf -> String
+renderLeafAsLatex l = processLeafContentsAsLatex . contents $ l
+
+renderStructIntoNote :: InternalDeckStruct -> Maybe Note   
+renderStructIntoNote (Node q _) =
+  let noteTitle = [i|[latex]#{getName q}[/latex]|]
+      noteContent = renderLeafAsLatex q
+      note = N [noteTitle, noteContent] 0 (def :: NoteModel) [] ""
       opt = Map.lookup "noanki" (getHeadingMeta q)
   in case opt of 
        Just _  -> Nothing
@@ -35,7 +43,7 @@ renderStructure curlev cardlev idk s =
   if curlev == (cardlev - 1)
     then let (Node concept childs) = s
              name = getName concept
-             notes = mapMaybe renderCardJSON childs
+             notes = mapMaybe renderStructIntoNote childs
          in (def :: Deck) {d_notes = notes, d_name = name}
     else let (Node concept childs) = s
              name =

@@ -172,19 +172,7 @@ flattenDeck ideck =
   }
 
 parseOrg :: String -> InternalDeck
-parseOrg f = parseDeck $ processPandoc $ readDoc f
-
-processInline :: Inline -> Inline
-processInline (Math _ x) = Str [i|[$]#{x}[/$]|]
-processInline x          = x
-
-processBlock :: Block -> Block
-processBlock (RawBlock (Format "latex") x) =
-  Plain [Str [i|[latex]#{x}[/latex]|]]
-processBlock b0 = walk processInline b0
-
-processPandoc :: Pandoc -> Pandoc
-processPandoc = walk processBlock
+parseOrg f = parseDeck $ readDoc f
 
 unLines :: String -> String
 unLines s = intercalate "" $ splitOn "\n" s
@@ -200,7 +188,7 @@ showSL s = getName s ++ ": " ++ renderLeaf s
 
 _drawAsForest :: String -> String
 _drawAsForest f =
-  let d = parseDeck $ processPandoc $ readDoc f
+  let d = parseDeck $ readDoc f
       author = getAuthor d
       title = getTitle d
       content = showDeck d
@@ -211,7 +199,7 @@ _drawAsForest f =
 
 _printAsJson :: String -> String
 _printAsJson f =
-  let d = parseDeck $ processPandoc $ readDoc f
+  let d = parseDeck $ readDoc f
   in BL.unpack $ encodePretty d
 
 renderAsInternal :: InternalDeck -> IO String

@@ -1,55 +1,55 @@
-{-# LANGUAGE DeriveAnyClass    #-}
-{-# LANGUAGE DeriveGeneric     #-}
-{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE QuasiQuotes #-}
 
 module Backend.CrowdAnki.NoteModel where
 
-import           Data.Aeson
-import qualified Data.ByteString.Lazy    as BL
-import           Data.Default
-import           Data.List
-import           Data.List.Split
-import qualified Data.Map                as Map
-import           Data.String.Interpolate
-import           Data.Tree
-import           GHC.Exts
-import           GHC.Generics
-import           Text.Pandoc
-import           Text.Pandoc.Walk        (walk)
-import           Utils
+import Data.Aeson
+import qualified Data.ByteString.Lazy as BL
+import Data.Default
+import Data.List
+import Data.List.Split
+import qualified Data.Map as Map
+import Data.String.Interpolate
+import Data.Tree
+import GHC.Exts
+import GHC.Generics
+import Text.Pandoc
+import Text.Pandoc.Walk (walk)
+import Utils
 
 data NoteModel = NM
-    { nm_css       :: String
-    , nm_flds      :: [NoteModelField]
+    { nm_css :: String
+    , nm_flds :: [NoteModelField]
     , nm_latexPost :: String
-    , nm_latexPre  :: String
-    , nm_name      :: String
-    , nm_sortf     :: Integer
-    , nm_tags      :: [String]
-    , nm_tmpls     :: [NoteTmpl]
-    , nm_uuid      :: String
+    , nm_latexPre :: String
+    , nm_name :: String
+    , nm_sortf :: Integer
+    , nm_tags :: [String]
+    , nm_tmpls :: [NoteTmpl]
+    , nm_uuid :: String
     } deriving (Show,Generic,Eq)
 
 data NoteTmpl = NT
     { nt_questionFormat :: String
-    , nt_answerFormat   :: String
-    , nt_ord            :: Integer
-    , nt_name           :: String
-    , nt_bFont          :: String
-    , nt_bSize          :: Integer
-    , nt_bqfmt          :: String
-    , nt_bafmt          :: String
+    , nt_answerFormat :: String
+    , nt_ord :: Integer
+    , nt_name :: String
+    , nt_bFont :: String
+    , nt_bSize :: Integer
+    , nt_bqfmt :: String
+    , nt_bafmt :: String
     } deriving (Show,Generic,Eq)
 
 data NoteModelField = NMF
-    { nmf_font   :: String
-    , nmf_media  :: [String]
-    , nmf_name   :: String
-    , nmf_ord    :: Integer
-    , nmf_rtl    :: Bool
-    , nmf_size   :: Integer
+    { nmf_font :: String
+    , nmf_media :: [String]
+    , nmf_name :: String
+    , nmf_ord :: Integer
+    , nmf_rtl :: Bool
+    , nmf_size :: Integer
     , nmf_sticky :: Bool
     } deriving (Show,Generic,Eq)
 
@@ -64,55 +64,33 @@ reqAll =
 
 leCSS =
     [i|
- html {
-    line-height: 2;
-    font-size: 20px;
-    text-align: left;
-    font-family: Fira sans;
-}
-
-img {
-    vertical-align: middle;
-    -webkit-transform: scale(0.7, 0.7);
-}
-
-.card {
-    background: #fff;
-    background: rgba(255, 255, 255, 0.2);
-    margin: auto;
-    width: 90%;
-    border: 1px solid white;
-    border-radius: 7px;
-}
-
-.front {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.2);
-    font-weight: 400;
-    font-size: 45px;
-    padding: 15px;
-}
-
-.back {
-    font-weight: 100;
-    padding: 40px 0px 40px 0px;
-    color: #fff;
-    font-size: 38px;
-}
 
 |]
 
 tikzLatex =
-    [i| \\providecommand{\\pgfsyspdfmark}[3]{}
-\\documentclass[convert={convertexe={convert}},border=2]{standalone}
+    [i| \\documentclass[10pt]{article}
+\\usepackage[paperheight=12cm,paperwidth=11cm,margin=0.5cm]{geometry}
+
 \\usepackage[utf8]{inputenc}
 \\usepackage[T1]{fontenc}
+\\usepackage{longtable}
+\\usepackage{booktabs}
+
+\\usepackage{libertine-type1}
+\\usepackage{biolinum-type1}
+\\usepackage{libertineMono-type1}
+\\usepackage[libertine]{newtxmath}
+
 \\usepackage{amssymb,amsmath}
 \\usepackage{xcolor}
 \\usepackage{tikz-cd}
 \\pagestyle{empty}
-\\begin{document}
 
+\\providecommand{\\tightlist}{%
+  \\setlength{\\itemsep}{0pt}\\setlength{\\parskip}{0pt}}
+
+
+\\begin{document}
 |]
 
 instance Default NoteModel where
