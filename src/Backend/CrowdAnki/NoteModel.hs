@@ -84,6 +84,16 @@ tikzLatex =
 \\usepackage{amssymb,amsmath}
 \\usepackage{xcolor}
 \\usepackage{tikz-cd}
+
+\\usepackage{inconsolata}
+\\newcommand{\\kk}{\\mathbb{k}}
+\\newcommand{\\KK}{\\mathbb{K}}
+\\newcommand{\\CC}{\\mathbb{C}}
+\\newcommand{\\BB}{\\mathbb{B}}
+\\newcommand{\\NN}{\\mathbb{N}}
+\\newcommand{\\RR}{\\mathbb{R}}
+
+
 \\pagestyle{empty}
 
 \\providecommand{\\tightlist}{%
