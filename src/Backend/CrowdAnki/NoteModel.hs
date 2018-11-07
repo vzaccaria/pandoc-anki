@@ -93,6 +93,8 @@ tikzLatex =
 \\newcommand{\\NN}{\\mathbb{N}}
 \\newcommand{\\RR}{\\mathbb{R}}
 \\newcommand{\np}[2]{\\langle #1, #2 \\rangle}
+\\newcommand{\\ladjof}{\\dashv}
+\\newcommand{\\radjof}{\\vdash}
 
 
 \\pagestyle{empty}
