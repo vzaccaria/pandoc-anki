@@ -92,7 +92,7 @@ tikzLatex =
 \\newcommand{\\BB}{\\mathbb{B}}
 \\newcommand{\\NN}{\\mathbb{N}}
 \\newcommand{\\RR}{\\mathbb{R}}
-\\newcommand{\np}[2]{\\langle #1, #2 \\rangle}
+\\newcommand{\\np}[2]{\\langle #1, #2 \\rangle}
 \\newcommand{\\ladjof}{\\dashv}
 \\newcommand{\\radjof}{\\vdash}
 
