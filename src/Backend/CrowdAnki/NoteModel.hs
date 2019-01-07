@@ -1,55 +1,55 @@
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DeriveAnyClass    #-}
+{-# LANGUAGE DeriveGeneric     #-}
+{-# LANGUAGE FlexibleContexts  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
+{-# LANGUAGE QuasiQuotes       #-}
 
 module Backend.CrowdAnki.NoteModel where
 
-import Data.Aeson
-import qualified Data.ByteString.Lazy as BL
-import Data.Default
-import Data.List
-import Data.List.Split
-import qualified Data.Map as Map
-import Data.String.Interpolate
-import Data.Tree
-import GHC.Exts
-import GHC.Generics
-import Text.Pandoc
-import Text.Pandoc.Walk (walk)
-import Utils
+import           Data.Aeson
+import qualified Data.ByteString.Lazy    as BL
+import           Data.Default
+import           Data.List
+import           Data.List.Split
+import qualified Data.Map                as Map
+import           Data.String.Interpolate
+import           Data.Tree
+import           GHC.Exts
+import           GHC.Generics
+import           Text.Pandoc
+import           Text.Pandoc.Walk        (walk)
+import           Utils
 
 data NoteModel = NM
-    { nm_css :: String
-    , nm_flds :: [NoteModelField]
+    { nm_css       :: String
+    , nm_flds      :: [NoteModelField]
     , nm_latexPost :: String
-    , nm_latexPre :: String
-    , nm_name :: String
-    , nm_sortf :: Integer
-    , nm_tags :: [String]
-    , nm_tmpls :: [NoteTmpl]
-    , nm_uuid :: String
+    , nm_latexPre  :: String
+    , nm_name      :: String
+    , nm_sortf     :: Integer
+    , nm_tags      :: [String]
+    , nm_tmpls     :: [NoteTmpl]
+    , nm_uuid      :: String
     } deriving (Show,Generic,Eq)
 
 data NoteTmpl = NT
     { nt_questionFormat :: String
-    , nt_answerFormat :: String
-    , nt_ord :: Integer
-    , nt_name :: String
-    , nt_bFont :: String
-    , nt_bSize :: Integer
-    , nt_bqfmt :: String
-    , nt_bafmt :: String
+    , nt_answerFormat   :: String
+    , nt_ord            :: Integer
+    , nt_name           :: String
+    , nt_bFont          :: String
+    , nt_bSize          :: Integer
+    , nt_bqfmt          :: String
+    , nt_bafmt          :: String
     } deriving (Show,Generic,Eq)
 
 data NoteModelField = NMF
-    { nmf_font :: String
-    , nmf_media :: [String]
-    , nmf_name :: String
-    , nmf_ord :: Integer
-    , nmf_rtl :: Bool
-    , nmf_size :: Integer
+    { nmf_font   :: String
+    , nmf_media  :: [String]
+    , nmf_name   :: String
+    , nmf_ord    :: Integer
+    , nmf_rtl    :: Bool
+    , nmf_size   :: Integer
     , nmf_sticky :: Bool
     } deriving (Show,Generic,Eq)
 
@@ -96,6 +96,9 @@ tikzLatex =
 \\newcommand{\\ang}[1]{\\langle #1 \\rangle}
 \\newcommand{\\ladjof}{\\dashv}
 \\newcommand{\\radjof}{\\vdash}
+\\newcommand{\\ds}{d^*}
+\\newcommand{\\es}{e^*}
+\\newcommand{\\fs}{f^*}
 
 
 \\pagestyle{empty}
