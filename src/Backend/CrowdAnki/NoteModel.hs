@@ -67,7 +67,7 @@ leCSS =
 
 |]
 
-tikzLatex =
+tikzLatex hd =
   [i| \\documentclass[10pt]{article}
 \\usepackage[paperheight=12cm,paperwidth=11cm,margin=0.5cm]{geometry}
 
@@ -76,31 +76,7 @@ tikzLatex =
 \\usepackage{longtable}
 \\usepackage{booktabs}
 
-\\usepackage{libertine-type1}
-\\usepackage{biolinum-type1}
-\\usepackage{libertineMono-type1}
-\\usepackage[libertine]{newtxmath}
-
-\\usepackage{amssymb,amsmath}
-\\usepackage{xcolor}
-\\usepackage{tikz-cd}
-
-\\usepackage{inconsolata}
-\\newcommand{\\kk}{\\mathbb{k}}
-\\newcommand{\\KK}{\\mathbb{K}}
-\\newcommand{\\CC}{\\mathbb{C}}
-\\newcommand{\\BB}{\\mathbb{B}}
-\\newcommand{\\NN}{\\mathbb{N}}
-\\newcommand{\\RR}{\\mathbb{R}}
-\\newcommand{\\ZZ}{\\mathbb{Z}}
-\\newcommand{\\np}[2]{\\langle #1, #2 \\rangle}
-\\newcommand{\\ang}[1]{\\langle #1 \\rangle}
-\\newcommand{\\ladjof}{\\dashv}
-\\newcommand{\\radjof}{\\vdash}
-\\newcommand{\\ds}{d^*}
-\\newcommand{\\es}{e^*}
-\\newcommand{\\fs}{f^*}
-
+#{hd}
 
 \\pagestyle{empty}
 
@@ -117,12 +93,14 @@ instance Default NoteModel where
       leCSS
       [nmf_def_front, nmf_def_back]
       "\\end{document}"
-      tikzLatex
+      ""
       "DefaultName"
       0
       []
       [(def :: NoteTmpl)]
       "NoUID"
+
+defaultNoteWithHeader hd = (def :: NoteModel) {nm_latexPre = tikzLatex hd}
 
 instance Default NoteTmpl where
   def =
