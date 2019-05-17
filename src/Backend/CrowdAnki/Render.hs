@@ -28,17 +28,30 @@ blockToLatex b =
   let ltx = writeLaTeX def (Pandoc (Meta Map.empty) b)
   in "[latex]" ++ ltx ++ "[/latex]"
 
+inlineToHtml :: [Inline] -> String
+inlineToHtml i = blockToHtml $ [Plain i]
+
+blockToHtml :: [Block] -> String
+blockToHtml b =
+    writeHtmlString def (Pandoc (Meta Map.empty) b)
+
+inlineTransform :: RenderOptions -> ([Inline] -> String)
+inlineTransform ro = if (wantsHtml ro) then inlineToHtml else inlineToLatex
+
+blockTransform :: RenderOptions -> ([Block] -> String)
+blockTransform ro = if (wantsHtml ro) then blockToHTML else blockToLatex
+
 getNodeConcept (Node q _) = q
 
-renderConceptToLatexNote :: String -> Concept -> Maybe Note
-renderConceptToLatexNote hd q =
-  let noteTitle = inlineToLatex . getTitle $ q
-      noteContent = blockToLatex . getConceptContents $ q
+renderConceptToNote :: RenderOptions -> Concept -> Maybe Note
+renderConceptToNote ro q =
+  let noteTitle = (inlineTransform ro) . getTitle $ q
+      noteContent = (blockTransform ro) . getConceptContents $ q
       note =
         N
           [noteTitle, noteContent]
           0
-          (defaultNoteWithHeader hd :: NoteModel)
+          (defaultNoteWithHeader $ getHeader ro :: NoteModel)
           []
           ""
       opt = Map.lookup "noanki" (getHeadingMeta q)
@@ -46,15 +59,15 @@ renderConceptToLatexNote hd q =
        Just _ -> Nothing
        Nothing -> Just note
 
-internalDeckToDeck :: InternalDeck -> String -> Deck
-internalDeckToDeck idk headdata =
+internalDeckToDeck :: InternalDeck -> RenderOptions -> Deck
+internalDeckToDeck idk ro =
   let renderConceptTree curlev cardlev s =
         if curlev == (cardlev - 1)
           then let (Node concept trees) = s
                    subdeckname = getName concept
                    notes =
                      mapMaybe
-                       ((renderConceptToLatexNote headdata) . getNodeConcept)
+                       ((renderConceptToNote ro) . getNodeConcept)
                        trees
                in (def :: Deck) {d_notes = notes, d_name = subdeckname}
           else let (Node concept trees) = s
@@ -66,5 +79,5 @@ internalDeckToDeck idk headdata =
                in (def :: Deck) {d_children = decks, d_name = name}
   in renderConceptTree 0 (getCardLevel idk) $ getConceptTree idk
 
-renderAsCrowdAnki :: InternalDeck -> String -> IO String
-renderAsCrowdAnki d headdata = d_dumpStringIO $ internalDeckToDeck d headdata
+renderAsCrowdAnki :: InternalDeck -> RenderOptions -> IO String
+renderAsCrowdAnki d ro = d_dumpStringIO $ internalDeckToDeck d ro

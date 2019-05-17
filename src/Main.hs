@@ -25,6 +25,8 @@ dispatchOptions usage' opts =
   let getBoolOpt x = isPresent opts (longOption x)
       getStringOpt x = getArg opts (longOption x)
       wantsInternal = getBoolOpt "internal"
+      wantsHtml = getBoolOpt "html"
+      wantsLatex = getBoolOpt "latex"
       wantsJson = getBoolOpt "json"
       wantsFlattened = getBoolOpt "flatten"
       prog = do
@@ -32,13 +34,10 @@ dispatchOptions usage' opts =
         filedata <- readFile filename
         headerData <- readFileData (getArg opts (longOption "header"))
         psed <- return $ IP.parseOrg filedata
-        fted <-
-          return $
-          if wantsFlattened
-            then flattenDeck psed
-            else psed
-        ca <- CA.renderAsCrowdAnki fted headerData
-        nt <- renderAsInternal $ fted
+        let fted = if wantsFlattened then flattenDeck psed else psed
+        let ro = RO wantsHtml wantsLatex headerData
+        ca <- CA.renderAsCrowdAnki fted ro
+        nt <- renderAsInternal fted
         putStrLn $
           case (wantsJson, wantsInternal) of
             (True, False) -> ca

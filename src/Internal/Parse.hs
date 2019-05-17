@@ -52,6 +52,12 @@ data InternalDeck = ID
     , otherMeta :: String -> Maybe String
     }
 
+data RenderOptions = RO
+    { wantsHtml :: Bool
+    , wantsLatex :: Bool
+    , getHeader :: String
+    }
+
 instance ToJSON InternalDeck where
     toJSON d =
         object
