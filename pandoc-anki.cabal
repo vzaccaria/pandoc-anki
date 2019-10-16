@@ -27,12 +27,11 @@ executable pandoc-anki
                      , docopt
                      , system-filepath
                      , text
-                     , monad-supply
                      , split
                      , data-default
                      , aeson
                      , bytestring
                      , uuid
                      , aeson-pretty
-                       , MonadRandom 
+                     , MonadRandom 
 

@@ -2,23 +2,23 @@
 
 module Main where
 
-import qualified Backend.CrowdAnki.Render as CA
-import Data.Aeson
-import Data.Aeson.Encode
+import qualified Backend.CrowdAnki.Render   as CA
+import           Data.Aeson
+import           Data.Aeson.Encode
 import qualified Data.ByteString.Lazy.Char8 as BL
-import qualified Data.Text as T
-import qualified Internal.Parse as IP
-import Internal.Parse
-import System.Console.Docopt.NoTH
-import System.Environment (getArgs)
-import UsageCLI (progUsage)
+import qualified Data.Text                  as T
+import           Internal.Parse
+import qualified Internal.Parse             as IP
+import           System.Console.Docopt.NoTH
+import           System.Environment         (getArgs)
+import           UsageCLI                   (progUsage)
 
 split :: String -> String -> [String]
 split sep str = map T.unpack $ T.splitOn (T.pack sep) (T.pack str)
 
 readFileData :: Maybe String -> IO String
 readFileData (Just filename) = readFile filename
-readFileData Nothing = return ""
+readFileData Nothing         = return ""
 
 dispatchOptions :: Docopt -> Arguments -> IO ()
 dispatchOptions usage' opts =
@@ -29,12 +29,16 @@ dispatchOptions usage' opts =
       wantsLatex = getBoolOpt "latex"
       wantsJson = getBoolOpt "json"
       wantsFlattened = getBoolOpt "flatten"
+      wantsFlattenedOne = getBoolOpt "flattenOne"
       prog = do
         filename <- getArgOrExitWith usage' opts (argument "FILE")
         filedata <- readFile filename
         headerData <- readFileData (getArg opts (longOption "header"))
         psed <- return $ IP.parseOrg filedata
-        let fted = if wantsFlattened then flattenDeck psed else psed
+        let fted =
+              if wantsFlattened
+                then flattenDeckLev psed 1
+                else psed
         let ro = RO wantsHtml wantsLatex headerData
         ca <- CA.renderAsCrowdAnki fted ro
         nt <- renderAsInternal fted

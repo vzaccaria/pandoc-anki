@@ -1,9 +1,9 @@
-resolver: lts-6.7
+resolver: lts-6.9
 
 packages:
 - '.'
 
-extra-deps: [ monad-supply-0.6 ]
+extra-deps: [ ]
 
 flags: {}
 
