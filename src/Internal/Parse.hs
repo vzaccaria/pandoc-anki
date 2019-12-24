@@ -93,6 +93,22 @@ add x [] = []
 asDasherized :: [Inline] -> [Char]
 asDasherized = concatMap dasherize
 
+-- [Str \"Generator\",Space,Str \"set\",Space,Str \"(Monoid)\",Span (\"\",[\"tag\"],[(\"data-tag-name\",\"noanki\")]) []]
+isNoAnki :: [Inline] -> Bool
+isNoAnki [] = False
+isNoAnki ((Span ("", ["tag"], pls) _):_) = checkTagNoAnki pls
+  where
+    checkTagNoAnki []                              = False
+    checkTagNoAnki (("data-tag-name", "noanki"):_) = True
+    checkTagNoAnki (_:as)                          = checkTagNoAnki as
+isNoAnki (_:as) = isNoAnki as
+
+addNoAnkiMeta :: [Inline] -> [(String, String)]
+addNoAnkiMeta s =
+  if isNoAnki s
+    then [("noanki", "true")]
+    else []
+
 asPlainString :: [Inline] -> [Char]
 asPlainString = concatMap f
   where
@@ -120,7 +136,7 @@ toInternalDeckStruct n0 ((h@(Header n1 (_, _, mt) text), bs):cs)
                (asDasherized text)
                0
                (asPlainString text)
-               (Map.fromList mt)
+               (Map.fromList (mt ++ addNoAnkiMeta text))
                text
                bs)
             subFor
