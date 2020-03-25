@@ -42,7 +42,7 @@ instance ToJSON Concept
 
 type ConceptTree = Tree Concept
 
--- Concept tree displayed here: https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQA5AAgAoAdPjhgAPHACcAtsADKMAMZ4CXABYx6UAL4BKEBtLpMufIRTlSxanSat2AYV54cjGDr0HsikyXOWGLNoicvAJCopLAzvQAZtq6+iAYHsZEAEw+NH42gdz8giLiUpExrvGJRgREZim+1gEgtnHu5V4AzKTVGbV2wXlhUrb0YpolTZ5EZB1W-uzIlI0JhmMoaZOZdbO6ljBQAObwRKBRYhASSGYgOBBIxG4gRydnNJdIKbf3p4jnz4gtb8cfaQuV0QABY-g8fk9gQBWcEAqFIABscKQbSBSAA7BpKBogA
+-- https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQA5AAgAoAdPjhgAPHACcAtsADKMAMZ4CXABYx6UAL4BKEBtLpMufIRTlSxanSat2AYV4ChoyTPmKwXPDkYxtu-SAY2O5EZBY0DCxsiJwOgiLiUj70AGZ+egbBxkQATOaWkTYx3PzxzklqaToZgYYhpqQ5BdbRIPalTonAtvRimtUBQUYERADMjc1RdnGdLj196YN12ShkTREt7MiU-pnDJsh561ZTMdu6ljBQAObwRKApYhASSGYgOBBIxDWPz680HyQOR+TxeiDegMQoxBf0QeXen0QABYYWDxgikABWVFAgGIgBsOKheKQAHYNJQNEA
 type ConceptForest = [ConceptTree]
 
 data InternalDeck = ID
@@ -208,7 +208,7 @@ removeNoAnkiNodes ideck =
   ideck {getConceptTree = removeNoAnkiNodesRT (getConceptTree ideck)}
 
 parseOrg :: String -> InternalDeck
-parseOrg f = parseDeck $ readDoc f
+parseOrg f = removeNoAnkiNodes $ parseDeck $ readDoc f
 
 unLines :: String -> String
 unLines s = intercalate "" $ splitOn "\n" s
