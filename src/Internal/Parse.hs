@@ -94,20 +94,14 @@ asDasherized :: [Inline] -> [Char]
 asDasherized = concatMap dasherize
 
 -- [Str \"Generator\",Space,Str \"set\",Space,Str \"(Monoid)\",Span (\"\",[\"tag\"],[(\"data-tag-name\",\"noanki\")]) []]
-isNoAnki :: [Inline] -> Bool
-isNoAnki [] = False
-isNoAnki ((Span ("", ["tag"], pls) _):_) = checkTagNoAnki pls
+getTags :: [Inline] -> [(String, String)]
+getTags ((Span ("", ["tag"], pls) _):pps) = getTags' pls ++ getTags pps
   where
-    checkTagNoAnki []                              = False
-    checkTagNoAnki (("data-tag-name", "noanki"):_) = True
-    checkTagNoAnki (_:as)                          = checkTagNoAnki as
-isNoAnki (_:as) = isNoAnki as
-
-addNoAnkiMeta :: [Inline] -> [(String, String)]
-addNoAnkiMeta s =
-  if isNoAnki s
-    then [("noanki", "true")]
-    else []
+    getTags' []                        = []
+    getTags' (("data-tag-name", s):as) = [(s, "true")] ++ getTags' as
+    getTags' (_:as)                    = getTags' as
+getTags (_:pps) = getTags pps
+getTags [] = []
 
 asPlainString :: [Inline] -> [Char]
 asPlainString = concatMap f
@@ -136,7 +130,7 @@ toInternalDeckStruct n0 ((h@(Header n1 (_, _, mt) text), bs):cs)
                (asDasherized text)
                0
                (asPlainString text)
-               (Map.fromList (mt ++ addNoAnkiMeta text))
+               (Map.fromList (mt ++ getTags text))
                text
                bs)
             subFor
@@ -192,20 +186,23 @@ flattenDeckLev ideck n =
   , getCardLevel = (2 - n + 1)
   }
 
-removeNoAnkiNodesRT :: ConceptTree -> ConceptTree
-removeNoAnkiNodesRT (Node c ns) =
-  if hasNoAnkiTag c
-    then (Node c [])
-    else (Node c (map removeNoAnkiNodesRT ns))
-  where
-    hasNoAnkiTag q =
-      case (Map.lookup "noanki" (getHeadingMeta q)) of
-        Just _  -> True
-        Nothing -> False
+has :: String -> Concept -> Bool
+has s q =
+  case (Map.lookup s (getHeadingMeta q)) of
+    Just _  -> True
+    Nothing -> False
+
+deepHasFocus (Node c ns) = (has "focus" c) || any deepHasFocus ns
+
+removeSubtrees :: ConceptTree -> ConceptTree
+removeSubtrees n@(Node c ns) =
+  if has "focus" c
+    then (Node c ns)
+    else Node c (filter deepHasFocus (map removeSubtrees ns))
 
 removeNoAnkiNodes :: InternalDeck -> InternalDeck
 removeNoAnkiNodes ideck =
-  ideck {getConceptTree = removeNoAnkiNodesRT (getConceptTree ideck)}
+  ideck {getConceptTree = removeSubtrees (getConceptTree ideck)}
 
 parseOrg :: String -> InternalDeck
 parseOrg f = removeNoAnkiNodes $ parseDeck $ readDoc f
@@ -220,7 +217,7 @@ showDeck :: InternalDeck -> String
 showDeck d = drawTree $ fmap showSL (getConceptTree d)
 
 showSL :: Concept -> String
-showSL s = getName s ++ ": " ++ renderLeaf s
+showSL s = getName s ++ ": " ++ renderLeaf s ++ (show $ getHeadingMeta s)
 
 _drawAsForest :: String -> String
 _drawAsForest f =

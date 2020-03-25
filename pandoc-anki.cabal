@@ -16,6 +16,14 @@ executable pandoc-anki
   hs-source-dirs:      src
   main-is:             Main.hs
   default-language:    Haskell2010
+  other-modules: Backend.CrowdAnki.Deck
+                 Backend.CrowdAnki.DeckConfig
+                 Backend.CrowdAnki.Note
+                 Backend.CrowdAnki.NoteModel
+                 Backend.CrowdAnki.Render
+                 Internal.Parse
+                 UsageCLI
+                 Utils
   build-depends:       base >= 4.7 && < 5
                      , pandoc
                      , pandoc-types

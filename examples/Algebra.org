@@ -2,6 +2,8 @@
 #+OPTIONS: H:3
 #+BEAMER_HEADER: \usepackage{tikz-cd}
 
+#+SELECT_TAGS: focus
+
 
 * Algebraic structures
 
@@ -13,7 +15,7 @@
    - *closure*
    - *associativity*
 
-** Groups                                                            :noanki:
+** Groups                                                             :focus:
 *** Introduction
 
    A [[https://en.wikipedia.org/wiki/Group_(mathematics)][group]] is a monoid where for all elements $a$, the (*) operation satisfies:
@@ -29,7 +31,7 @@
 
    The *trivial subgroup* of any group is the subgroup ${e}$ consisting of just the identity element.
 
-*** Coset
+*** Coset                                                             :focus:
     Given a subgroup $H$ and some $a$ in $G$, we define the *left coset* of $H$ as
     $aH = \{ah : h \in H\}$. We have some properties holding:
 
