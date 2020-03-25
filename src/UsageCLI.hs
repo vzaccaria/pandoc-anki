@@ -20,7 +20,6 @@ Usage:
 Options:
     -i, --internal         Dump internal tree representation
     -f, --flatten          Remove all hierarchies
-    -o, --flattenOne       Flatten to level 1
     -j, --json             Output JSON suitable for CrowdAnki
     -H, --html             Render text as HTML
     -l, --latex            Render text as LaTeX

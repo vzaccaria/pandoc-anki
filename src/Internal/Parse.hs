@@ -40,10 +40,9 @@ data Concept = Concept
 
 instance ToJSON Concept
 
--- instance ToJSON Concept where
--- toJSON s = String $ T.pack $ processLeafContents (getConceptContents s)
 type ConceptTree = Tree Concept
 
+-- Concept tree displayed here: https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQA5AAgAoAdPjhgAPHACcAtsADKMAMZ4CXABYx6UAL4BKEBtLpMufIRTlSxanSat2AYV54cjGDr0HsikyXOWGLNoicvAJCopLAzvQAZtq6+iAYHsZEAEw+NH42gdz8giLiUpExrvGJRgREZim+1gEgtnHu5V4AzKTVGbV2wXlhUrb0YpolTZ5EZB1W-uzIlI0JhmMoaZOZdbO6ljBQAObwRKBRYhASSGYgOBBIxG4gRydnNJdIKbf3p4jnz4gtb8cfaQuV0QABY-g8fk9gQBWcEAqFIABscKQbSBSAA7BpKBogA
 type ConceptForest = [ConceptTree]
 
 data InternalDeck = ID
@@ -81,6 +80,7 @@ add :: Block -> [Chunk] -> [Chunk]
 add x@Header {} cs = cs ++ [(x, [])]
 add x cs@(_:_) =
   let i = init cs
+  -- Concept tree displayed here:
       (h, l) = last cs
   in i ++ [(h, l ++ [x])]
 add x [] = []
@@ -191,6 +191,21 @@ flattenDeckLev ideck n =
   { getConceptTree = (flattenTreeLev n (getConceptTree ideck))
   , getCardLevel = (2 - n + 1)
   }
+
+removeNoAnkiNodesRT :: ConceptTree -> ConceptTree
+removeNoAnkiNodesRT (Node c ns) =
+  if hasNoAnkiTag c
+    then (Node c [])
+    else (Node c (map removeNoAnkiNodesRT ns))
+  where
+    hasNoAnkiTag q =
+      case (Map.lookup "noanki" (getHeadingMeta q)) of
+        Just _  -> True
+        Nothing -> False
+
+removeNoAnkiNodes :: InternalDeck -> InternalDeck
+removeNoAnkiNodes ideck =
+  ideck {getConceptTree = removeNoAnkiNodesRT (getConceptTree ideck)}
 
 parseOrg :: String -> InternalDeck
 parseOrg f = parseDeck $ readDoc f
